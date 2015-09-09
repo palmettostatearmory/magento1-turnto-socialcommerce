@@ -1,6 +1,6 @@
-Installation Instructions:
+# magento-extension
 
-Manual installation
+Magento Extension
 1. Login to Magento admin panel
 2. If enabled, disable Cache (in System->Cache Management)
 3. If enabled, disable Compilation (in System->Tools->Compilation)
@@ -11,7 +11,4 @@ Manual installation
 7. Go to Turnto->Integration menu to configure the module
 8. Re-enable Cache and/or Compilation, if desired.
 
-
-
-
-
+test change2
