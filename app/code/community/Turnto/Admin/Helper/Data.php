@@ -61,47 +61,94 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
 		           return null;
 	      }
 
-  	      $i=0;
-
-	      #xml feed product 'sku' attribute contains product_id 
+ 
 	      $key_field = 'sku';
+ 
+	      foreach($this->_feed->products->product as $prod_rating) 
+        {
 
-	      foreach($this->_feed->products->product as $product) 
-	      {
-
-	         if(!$product[$key_field]){
-                 Mage::log('Product sku is missing in the feed...', null, 'turnto_product_ratings.log');
+           if(!$prod_rating[$key_field]){
+                 Mage::log('Product sku (id) is missing in the feed. Feed product record is invalid...', null, 'turnto_product_ratings.log');
                  continue;
 	         }
 	         	
 
 	      	 $rating = Mage::getModel('turnto_admin/rating')
                                   ->getCollection()
-                                  ->addFieldToFilter('product_id', $product[$key_field])
-                                  ->getFirstItem();
+                              //    ->addFieldToFilter('product_id', $prod_rating[$key_field])
+                                   ->addFieldToFilter($key_field, $prod_rating[$key_field])
+                                   ->getFirstItem();
 
              try{
               
-                  if(!$rating->getCreatedAt())
-                  	   $rating->setCreatedAt(Mage::getModel('core/date')->date('Y-m-d H:i:s'));
-                  
+                     
+                   # udpate bv_average_rating attribute
+                   
+                   $bvProductExternalId = $prod_rating[$key_field];
+                            
+                   $productAverageRating = (string) $prod_rating;
+                   //     echo $productAverageRating; echo '<br>';
+                   $productReviewCount = $prod_rating['review_count'];
+                   $productRatingRange = 5;
 
-                  $rating->setProductId($product[$key_field])
-                  //  ->setSku($product['sku'])
-                    ->setReviewCount($product['review_count'])
-                    ->setUpdatedAt(Mage::getModel('core/date')->date('Y-m-d H:i:s'))
-                    ->setRating($product[$i])
-                    ->save();
+                  // $product = Bazaarvoice_Helper_Data::getProductFromProductExternalId($bvProductExternalId);
+                   $product = Mage::getModel('catalog/product')->loadByAttribute('sku', $bvProductExternalId); 
+
+                   if ($product) {
+
+                            $productAverageRating = (int) round($productAverageRating);
+
+                            $attribute=Mage::getModel('catalog/product')->getResource()->getAttribute("bv_average_rating");
+
+                            if($attribute){
+
+                                    $productAverageRating = $attribute->getSource()->getOptionId($productAverageRating);
+                                    $product->setBvAverageRating($productAverageRating);
+                                    $product->setBvReviewCount($productReviewCount);
+                                    $product->setBvRatingRange($productRatingRange);
+                                    $product->getResource()->saveAttribute($product, 'bv_average_rating');
+                                    $product->getResource()->saveAttribute($product, 'bv_review_count');
+                                    $product->getResource()->saveAttribute($product, 'bv_rating_range');
+                            }
+                            
+                            # save rating for tne product                                
+                            if(!$rating->getCreatedAt())
+                              $rating->setCreatedAt(Mage::getModel('core/date')->date('Y-m-d H:i:s'));
+                  
+                             $rating->setSku($prod_rating[$key_field])
+                              ->setProductId($product->getId())
+                              ->setReviewCount($prod_rating['review_count'])
+                              ->setUpdatedAt(Mage::getModel('core/date')->date('Y-m-d H:i:s'))
+                              ->setRating((string) $prod_rating)
+                              ->save();
+
+
+                    } else {
+                            Mage::log('Could not find Magento product for xml file product id:'. $bvProductExternalId, null, 'turnto_product_ratings.log');
+                   }
 
              }catch(Exception $e){
-             	Mage::log('Error updating product rating for product id:'.$product[$key_field].'. Error details:'.$e->getMessage(), null, 'turnto_product_ratings.log');
+             	Mage::log('Error updating product rating for product id:'.$prod_rating[$key_field].'. Error details:'.$e->getMessage(), null, 'turnto_product_ratings.log');
 
              }
 
-                       
-			 $i++;
 		  }
-	
+
+      #cleanup turnto_product_ratings table
+      $resource = Mage::getSingleton('core/resource');
+      $write = $resource->getConnection('core_write');
+	    
+      $table_name = Mage::getConfig()->getTablePrefix().'turnto_products_ratings';
+      
+      $sql = "DELETE FROM ".$table_name." WHERE sku = ''";
+
+      try{
+            $result = $write->query($sql);
+
+      }catch (Exception $e){
+                   Mage::log('Error:'.$e->getMessage(), null, 'turnto_product_ratings.log');
+      }
+     
    }
 
    public function getLastUpdated()

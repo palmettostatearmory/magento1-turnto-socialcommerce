@@ -66,6 +66,7 @@
                             <show_in_store>1</show_in_store>
                             <validate>required-entry</validate>
                         </site_auth> 
+                        <!--
                         <enabled translate="label">
                             <label>Show Turnto Products Ratings</label>
                             <frontend_type>select</frontend_type>
@@ -76,7 +77,7 @@
                             <show_in_store>1</show_in_store>
                             <comment>When set to Yes, Turnto products ratings will be shown.</comment>
                         </enabled> 
-
+                        -->
                     </fields>
                  </feedconfig>
                  
