@@ -133,7 +133,11 @@
         <turnto_admin>
             <feedconfig>
                 <url>http://static.www.turnto.com/static/export/</url>
-            </feedconfig>           
+            </feedconfig>
+            <historicalfeedconfig>
+                <storeId>1</storeId>
+                <websiteId>1</websiteId>
+            </historicalfeedconfig>
         </turnto_admin>
     </default>   
     <crontab>
@@ -146,6 +150,14 @@
                     <model>turnto_admin/observer::getProductsRatingsFeed</model>
                 </run>
             </turnto_products_ratings>
+            <turnto_historical_orders_feed>
+                <schedule>
+                    <cron_expr>0 1 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>turnto_admin/observer::pushHistoricalOrdersFeed</model>
+                </run>
+            </turnto_historical_orders_feed>
         </jobs>
     </crontab>
 </config>

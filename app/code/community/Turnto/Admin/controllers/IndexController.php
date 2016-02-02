@@ -27,7 +27,7 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
             $baseMediaUrl = Mage::app()->getStore($storeId)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'catalog/product';
 
 
-            echo "SKU\tIMAGEURL\tTITLE\tPRICE\tCURRENCY\tACTIVE\tITEMURL\tCATEGORY\tKEYWORDS\tREPLACEMENTSKU\tINSTOCK\tVIRTUALPARENTCODE\tCATEGORYPATHJSON\tISCATEGORY";
+            echo "SKU\tIMAGEURL\tTITLE\tPRICE\tCURRENCY\tACTIVE\tITEMURL\tCATEGORY\tKEYWORDS\tREPLACEMENTSKU\tINSTOCK\tVIRTUALPARENTCODE\tCATEGORYPATHJSON\tISCATEGORY\tBRAND";
             echo "\n";
 
             $pageSize = 100;
@@ -116,6 +116,9 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     echo "\t";
                     //ISCATEGORY
                     echo "n";
+                    echo "\t";
+                    //BRAND
+                    echo $product->getAttributeText('manufacturer');
                     echo "\n";
                 }
                 $page++;
@@ -158,6 +161,8 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     echo "\t";
                     //ISCATEGORY
                     echo "Y";
+                    echo "\t";
+                    //BRAND
                     echo "\n";
                 }
             }
