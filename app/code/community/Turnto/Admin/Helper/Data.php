@@ -295,7 +295,11 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         $file = $path . $fileName;
         $siteKey = Mage::getStoreConfig('turnto_admin/general/site_key');
         $authKey = Mage::getStoreConfig('turnto_admin/general/site_auth');
-        $url = "https://www.turnto.com/feedUpload/postfile";
+        $baseUrl = Mage::getStoreConfig('turnto_admin/general/url');
+        if (!$baseUrl) {
+            $baseUrl = "http://www.turnto.com";
+        }
+        $url = $baseUrl . "/feedUpload/postfile";
         $feedStyle = "tab-style.1";
 
         if (!$siteKey || !$authKey) {

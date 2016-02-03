@@ -138,6 +138,10 @@
                 <storeId>1</storeId>
                 <websiteId>1</websiteId>
             </historicalfeedconfig>
+            <general>
+                <static_url>http://static.www.turnto.com</static_url>
+                <url>http://www.turnto.com</url>
+            </general>
         </turnto_admin>
     </default>   
     <crontab>
