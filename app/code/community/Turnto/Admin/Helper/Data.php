@@ -172,7 +172,9 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
 
     public function generateHistoricalOrdersFeed($startDate, $storeId, $fileName) {
         $path = Mage::getBaseDir('media') . DS . 'turnto/';
-        mkdir($path, 0755);
+        if (!file_exists($path)) {
+            mkdir($path, 0755);
+        }
 
         $handle = fopen($path . $fileName, 'w');
 
@@ -281,7 +283,9 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
 
     public function pushHistoricalOrdersFeed() {
         $path = Mage::getBaseDir('media') . DS . 'turnto/';
-        mkdir($path, 0755);
+        if (!file_exists($path)) {
+            mkdir($path, 0755);
+        }
 
         $logFile = 'turnto_historical_feed_job.log';
 
