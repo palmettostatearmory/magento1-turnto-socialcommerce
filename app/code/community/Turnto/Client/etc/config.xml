@@ -3,7 +3,7 @@
 <config>
     <modules>
         <Turnto_Admin>
-            <version>2.2.11</version>
+            <version>3.0.0</version>
         </Turnto_Admin>
     </modules>
 
