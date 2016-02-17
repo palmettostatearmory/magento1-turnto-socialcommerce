@@ -282,58 +282,63 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
     }
 
     public function pushHistoricalOrdersFeed() {
-        $path = Mage::getBaseDir('media') . DS . 'turnto/';
-        if (!file_exists($path)) {
-            mkdir($path, 0755);
-        }
-
         $logFile = 'turnto_historical_feed_job.log';
+        try {
+            $path = Mage::getBaseDir('media') . DS . 'turnto/';
+            if (!file_exists($path)) {
+                mkdir($path, 0755);
+            }
 
-        Mage::log('Started pushHistoricalOrdersFeed', null, $logFile);
+            Mage::log('Started pushHistoricalOrdersFeed', null, $logFile);
 
-        $fileName = 'magento_auto_histfeed.csv';
-        $storeId =  Mage::getStoreConfig('turnto_admin/general/storeId');
-        $storeId = $storeId ? $storeId : 1;
-        $this->generateHistoricalOrdersFeed(mktime(0, 0, 0, date("m"), date("d"), date("Y") - 2), $storeId, $fileName);
+            $fileName = 'magento_auto_histfeed.csv';
+            $storeId = Mage::getStoreConfig('turnto_admin/general/storeId');
+            $storeId = $storeId ? $storeId : 1;
 
-        $file = $path . $fileName;
-        $siteKey = Mage::getStoreConfig('turnto_admin/general/site_key');
-        $authKey = Mage::getStoreConfig('turnto_admin/general/site_auth');
-        $baseUrl = Mage::getStoreConfig('turnto_admin/general/url');
-        if (!$baseUrl) {
-            $baseUrl = "http://www.turnto.com";
+            $this->generateHistoricalOrdersFeed(mktime(0, 0, 0, date("m"), date("d"), date("Y") - 2), $storeId, $fileName);
+
+
+            $file = $path . $fileName;
+            $siteKey = Mage::getStoreConfig('turnto_admin/general/site_key');
+            $authKey = Mage::getStoreConfig('turnto_admin/general/site_auth');
+            $baseUrl = Mage::getStoreConfig('turnto_admin/general/url');
+            if (!$baseUrl) {
+                $baseUrl = "http://www.turnto.com";
+            }
+            $url = $baseUrl . "/feedUpload/postfile";
+            $feedStyle = "tab-style.1";
+
+            if (!$siteKey || !$authKey) {
+                return;
+            }
+
+            Mage::log('Filename: ' . $fileName, null, $logFile);
+            Mage::log('Store Id: ' . $storeId, null, $logFile);
+            Mage::log('siteKey: ' . $siteKey, null, $logFile);
+            Mage::log('authKey: ' . $authKey, null, $logFile);
+
+            $fields = array('siteKey' => $siteKey, 'authKey' => $authKey, 'feedStyle' => $feedStyle, 'file' => "@$file");
+            $fields_string = '';
+            foreach ($fields as $key => $value) {
+                $fields_string .= $key . '=' . $value . '&';
+            }
+            rtrim($fields_string, '&');
+
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            Mage::log('Ended pushHistoricalOrdersFeed', null, $logFile);
+
+            echo $response;
+        } catch (Exception $e) {
+            Mage::log('Exception caught while executing pushHistoricalOrdersFeed: ' . $e->getMessage(), null, $logFile);
         }
-        $url = $baseUrl . "/feedUpload/postfile";
-        $feedStyle = "tab-style.1";
-
-        if (!$siteKey || !$authKey) {
-            return;
-        }
-
-        Mage::log('Filename: ' . $fileName, null, $logFile);
-        Mage::log('Store Id: ' . $storeId, null, $logFile);
-        Mage::log('siteKey: ' . $siteKey, null, $logFile);
-        Mage::log('authKey: ' . $authKey, null, $logFile);
-
-        $fields = array('siteKey' => $siteKey, 'authKey' => $authKey, 'feedStyle' => $feedStyle, 'file' => "@$file");
-        $fields_string = '';
-        foreach ($fields as $key => $value) {
-            $fields_string .= $key . '=' . $value . '&';
-        }
-        rtrim($fields_string, '&');
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        Mage::log('Ended pushHistoricalOrdersFeed', null, $logFile);
-
-        echo $response;
     }
 }
