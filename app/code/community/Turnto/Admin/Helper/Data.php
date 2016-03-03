@@ -172,7 +172,9 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
 
     public function generateHistoricalOrdersFeed($startDate, $storeId, $fileName) {
         $path = Mage::getBaseDir('media') . DS . 'turnto/';
-        mkdir($path, 0755);
+        if (!file_exists($path)) {
+            mkdir($path, 0755);
+        }
 
         $handle = fopen($path . $fileName, 'w');
 
@@ -281,7 +283,9 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
 
     public function pushHistoricalOrdersFeed() {
         $path = Mage::getBaseDir('media') . DS . 'turnto/';
-        mkdir($path, 0755);
+        if (!file_exists($path)) {
+            mkdir($path, 0755);
+        }
 
         $logFile = 'turnto_historical_feed_job.log';
 
@@ -302,14 +306,14 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         $url = $baseUrl . "/feedUpload/postfile";
         $feedStyle = "tab-style.1";
 
-        if (!$siteKey || !$authKey) {
-            return;
-        }
-
         Mage::log('Filename: ' . $fileName, null, $logFile);
         Mage::log('Store Id: ' . $storeId, null, $logFile);
         Mage::log('siteKey: ' . $siteKey, null, $logFile);
         Mage::log('authKey: ' . $authKey, null, $logFile);
+
+        if (!$siteKey || !$authKey) {
+            return;
+        }
 
         $fields = array('siteKey' => $siteKey, 'authKey' => $authKey, 'feedStyle' => $feedStyle, 'file' => "@$file");
         $fields_string = '';
@@ -318,6 +322,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         }
         rtrim($fields_string, '&');
 
+        Mage::log('Attempting to post file to ' . $url, null, $logFile);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -326,6 +331,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         curl_setopt($ch, CURLOPT_HEADER, 0);
 
         $response = curl_exec($ch);
+        Mage::log('Response from server: ' . $response);
         curl_close($ch);
 
         Mage::log('Ended pushHistoricalOrdersFeed', null, $logFile);
