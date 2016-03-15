@@ -19,7 +19,7 @@ class Turnto_Client_Block_Reviewsteaser extends Mage_Core_Block_Template
                 Mage::getDesign()->getPackageName(),
                 Mage::getDesign()->getTheme('template')
             ),
-            'cache_key' => TURNTO_REVIEW_TEASERS_CACHE_KEY . $this->getProduct()->getId()
+            'cache_key' => $this::TURNTO_REVIEW_TEASERS_CACHE_KEY . $this->getProduct()->getId()
         ));
     }
 

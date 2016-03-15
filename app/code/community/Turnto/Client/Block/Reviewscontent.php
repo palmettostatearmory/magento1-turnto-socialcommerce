@@ -22,7 +22,7 @@ class Turnto_Client_Block_Reviewscontent extends Mage_Core_Block_Template
                 Mage::getDesign()->getPackageName(),
                 Mage::getDesign()->getTheme('template')
             ),
-            'cache_key' => TURNTO_REVIEW_STATIC_CACHE_KEY . $helper->getProduct()->getId()
+            'cache_key' => $this::TURNTO_REVIEW_STATIC_CACHE_KEY . $helper->getProduct()->getId()
         ));
     }
 

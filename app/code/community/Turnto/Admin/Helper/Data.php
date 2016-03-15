@@ -282,21 +282,20 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
     }
 
     public function pushHistoricalOrdersFeed() {
+        $path = Mage::getBaseDir('media') . DS . 'turnto/';
+        if (!file_exists($path)) {
+            mkdir($path, 0755);
+        }
+
         $logFile = 'turnto_historical_feed_job.log';
+
+        Mage::log('Started pushHistoricalOrdersFeed', null, $logFile);
+
         try {
-            $path = Mage::getBaseDir('media') . DS . 'turnto/';
-            if (!file_exists($path)) {
-                mkdir($path, 0755);
-            }
-
-            Mage::log('Started pushHistoricalOrdersFeed', null, $logFile);
-
             $fileName = 'magento_auto_histfeed.csv';
             $storeId = Mage::getStoreConfig('turnto_admin/general/storeId');
             $storeId = $storeId ? $storeId : 1;
-
             $this->generateHistoricalOrdersFeed(mktime(0, 0, 0, date("m"), date("d"), date("Y") - 2), $storeId, $fileName);
-
 
             $file = $path . $fileName;
             $siteKey = Mage::getStoreConfig('turnto_admin/general/site_key');
@@ -308,14 +307,15 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             $url = $baseUrl . "/feedUpload/postfile";
             $feedStyle = "tab-style.1";
 
+            Mage::log('Filename: "' . $fileName . '"', null, $logFile);
+            Mage::log('Store Id: "' . $storeId . '"', null, $logFile);
+            Mage::log('siteKey: "' . $siteKey . '"', null, $logFile);
+            Mage::log('authKey: "' . $authKey . '"', null, $logFile);
+
             if (!$siteKey || !$authKey) {
+                Mage::log('No siteKey or authKey found in configuration', null, $logFile);
                 return;
             }
-
-            Mage::log('Filename: ' . $fileName, null, $logFile);
-            Mage::log('Store Id: ' . $storeId, null, $logFile);
-            Mage::log('siteKey: ' . $siteKey, null, $logFile);
-            Mage::log('authKey: ' . $authKey, null, $logFile);
 
             $fields = array('siteKey' => $siteKey, 'authKey' => $authKey, 'feedStyle' => $feedStyle, 'file' => "@$file");
             $fields_string = '';
@@ -324,6 +324,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             }
             rtrim($fields_string, '&');
 
+            Mage::log('Attempting to post file to ' . $url, null, $logFile);
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -332,13 +333,14 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             curl_setopt($ch, CURLOPT_HEADER, 0);
 
             $response = curl_exec($ch);
+            Mage::log('Response from server: ' . $response);
             curl_close($ch);
 
             Mage::log('Ended pushHistoricalOrdersFeed', null, $logFile);
 
             echo $response;
         } catch (Exception $e) {
-            Mage::log('Exception caught while executing pushHistoricalOrdersFeed: ' . $e->getMessage(), null, $logFile);
+            Mage::log('Exception caught: ' . $e->getMessage(), null, $logFile);
         }
     }
 }
