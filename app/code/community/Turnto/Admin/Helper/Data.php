@@ -333,7 +333,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             curl_setopt($ch, CURLOPT_HEADER, 0);
 
             $response = curl_exec($ch);
-            Mage::log('Response from server: ' . $response);
+            Mage::log('Response from server: ' . $response, null, $logFile);
             curl_close($ch);
 
             Mage::log('Ended pushHistoricalOrdersFeed', null, $logFile);
