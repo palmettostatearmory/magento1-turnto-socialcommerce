@@ -8,7 +8,7 @@
             <block type="turnto_client_block/qateaser" name="turnto_qa_teaser" as="turnto_qa_teaser" template="turnto/client/qa.teaser.phtml"/>
             <block type="turnto_client_block/reviewsteaser" name="turnto_reviews_teaser" as="turnto_reviews_teaser" template="turnto/client/reviews.teaser.phtml"/>
         </reference>
-        <reference name="content">
+        <reference name="product.info">
             <block type="turnto_client_block/reviewscontent" name="turnto_reviews_content" as="turnto_reviews_content" template="turnto/client/reviews.phtml"/>
             <block type="turnto_client_block/qacontent" name="turnto_qa_content" as="turnto_qa_content" template="turnto/client/qa.phtml"/>
         </reference>

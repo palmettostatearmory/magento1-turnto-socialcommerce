@@ -21,7 +21,8 @@ class Turnto_Client_Block_Qacontent extends Mage_Core_Block_Template
                 Mage::app()->getStore()->getId(),
                 (int)Mage::app()->getStore()->isCurrentlySecure(),
                 Mage::getDesign()->getPackageName(),
-                Mage::getDesign()->getTheme('template')
+                Mage::getDesign()->getTheme('template'),
+                Mage::getStoreConfig('turnto_admin/qa/qa_setup_type')
             ),
             'cache_key' => $this::TURNTO_QA_STATIC_CACHE_KEY . $helper->getProduct()->getId()
         ));
