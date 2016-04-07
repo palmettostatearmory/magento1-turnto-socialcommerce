@@ -23,6 +23,7 @@ class Turnto_Client_Block_Qacontent extends Mage_Core_Block_Template
                 Mage::getDesign()->getPackageName(),
                 Mage::getDesign()->getTheme('template'),
                 Mage::getStoreConfig('turnto_admin/qa/qa_setup_type')
+                // todo: add tra version so that it clears the cache with the version is changed?
             ),
             'cache_key' => $this::TURNTO_QA_STATIC_CACHE_KEY . $helper->getProduct()->getId()
         ));
