@@ -9,5 +9,6 @@ user=$4
 
 echo "posting the server $server with key file $keyfile"
 
-scp -r -i $keyfile app $user@$server:$pathtomagento
+scp -r -i $keyfile ../app $user@$server:$pathtomagento
+scp -r -i $keyfile ../var $user@$server:$pathtomagento
 
