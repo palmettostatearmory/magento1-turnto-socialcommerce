@@ -13,16 +13,16 @@ Magento Extension<br />
 <br />
 <br />
 <h1>Building Extension</h1>
-<ul>
-  <li>Make sure all config.xml files have been updated to the correct version</li>
-  <li>Commit changes for release and push to github</li>
-  <li>Packaged extension will be in <PROJECT_DIRECTORY>/build<li>
+<ul style="list-style:none">
+  <li>1. Make sure all config.xml files have been updated to the correct version</li>
+  <li>2. Commit changes for release and push to github</li>
+  <li>3. Packaged extension will be in &lt;PROJECT_DIRECTORY&lt;/build<li>
 </ul>
 <h1>Building Extension and Creating a release</h1>
-<ul>
-  <li>Commit changes for release</li>
-  <li>Make sure all config.xml files have been updated to the correct version</li>
-  <li>Run buildMangetoExtension.sh &lt;TAG_NAME&gt;</li>
-  <li>Packaged extension will be created in &lt;PROJECT_DIRECTORY&gt;/build<li>
+<ul style="list-style:none">
+  <li>1. Commit changes for release</li>
+  <li>2. Make sure all config.xml files have been updated to the correct version</li>
+  <li>3. Run buildMangetoExtension.sh &lt;TAG_NAME&gt;</li>
+  <li>4. Packaged extension will be created in &lt;PROJECT_DIRECTORY&gt;/build<li>
 </ul>
 

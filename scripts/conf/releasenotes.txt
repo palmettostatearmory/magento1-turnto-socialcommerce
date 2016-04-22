@@ -1,0 +1,17 @@
+TurnTo Admin Extension<br>
+<br>
+2.0 Adds support for Single Sign On<br>
+2.1 Re-wrote catalog feed generator<br>
+2.1.6 - Better catalog support in catalog feed generator.<br>
+2.2.0 - Support for sku average rating feed<br>
+2.2.2 - Minor bug fix<br>
+2.2.4 - Fixed excessive load time on configuration screen.<br>
+2.2.5 - Catalog Feed tweaks<br>
+2.2.7 - Support for Magento Security Patch (SUPEE-6788)<br>
+2.2.9 - Historical Feed bug fix<br>
+2.2.10 - Minor bug fix for historical feed exporter<br>
+2.2.11 - Fixed circular reference in category tree.  Optimized memory usage in catalog feed generator.<br>
+2.3.0 - Added ability to push the historical feed nightly<br>
+3.0 - Refactored all code into blocks that can easily be added to templates.  Almost all TurnTo functionality can now be easily configured from the Magento Admin Panel Configuration page.<br>
+3.0.1 - Minor bug fixes<br>
+3.0.2 - Minor bug fixes<br>
