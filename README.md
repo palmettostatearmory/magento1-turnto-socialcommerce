@@ -22,7 +22,7 @@ Magento Extension<br />
 <ul>
   <li>Commit changes for release</li>
   <li>Make sure all config.xml files have been updated to the correct version</li>
-  <li>Run buildMangetoExtension.sh <TAG_NAME></li>
-  <li>Packaged extension will be created in <PROJECT_DIRECTORY>/build<li>
+  <li>Run buildMangetoExtension.sh &lt;TAG_NAME&gt;</li>
+  <li>Packaged extension will be created in &lt;PROJECT_DIRECTORY&gt;/build<li>
 </ul>
 
