@@ -10,3 +10,19 @@ Magento Extension<br />
 6. Login back to Magento admin panel<br />
 7. Go to Turnto->Integration menu to configure the module<br />
 8. Re-enable Cache and/or Compilation, if desired.<br />
+<br />
+<br />
+<h1>Building Extension</h1>
+<ul>
+  <li>Make sure all config.xml files have been updated to the correct version</li>
+  <li>Commit changes for release and push to github</li>
+  <li>Packaged extension will be in <PROJECT_DIRECTORY>/build<li>
+</ul>
+<h1>Building Extension and Creating a release</h1>
+<ul>
+  <li>Commit changes for release</li>
+  <li>Make sure all config.xml files have been updated to the correct version</li>
+  <li>Run buildMangetoExtension.sh <TAG_NAME></li>
+  <li>Packaged extension will be created in <PROJECT_DIRECTORY>/build<li>
+</ul>
+
