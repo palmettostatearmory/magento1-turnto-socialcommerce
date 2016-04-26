@@ -27,7 +27,7 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
             $baseMediaUrl = Mage::app()->getStore($storeId)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'catalog/product';
 
 
-            echo "SKU\tIMAGEURL\tTITLE\tPRICE\tCURRENCY\tACTIVE\tITEMURL\tCATEGORY\tKEYWORDS\tREPLACEMENTSKU\tINSTOCK\tVIRTUALPARENTCODE\tCATEGORYPATHJSON\tISCATEGORY\tBRAND";
+            echo "SKU\tIMAGEURL\tTITLE\tPRICE\tCURRENCY\tACTIVE\tITEMURL\tCATEGORY\tKEYWORDS\tREPLACEMENTSKU\tINSTOCK\tVIRTUALPARENTCODE\tCATEGORYPATHJSON\tISCATEGORY\tBRAND\tUPC\tMPN\tISBN\tEAN\tJAN\tASIN";
             echo "\n";
 
             $pageSize = 100;
@@ -119,6 +119,31 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     echo "\t";
                     //BRAND
                     echo $product->getAttributeText('manufacturer');
+                    echo "\t";
+                    //UPC
+                    $upcCode = Mage::getStoreConfig('turnto_admin/general/upc_attribute');
+                    echo self::getProductAttributeValue($product, $storeId, $upcCode);
+                    echo "\t";
+                    //MPN
+                    $mpnCode = Mage::getStoreConfig('turnto_admin/general/mpn_attribute');
+                    echo self::getProductAttributeValue($product, $storeId, $mpnCode);
+                    echo "\t";
+                    //ISBN
+                    $isbnCode = Mage::getStoreConfig('turnto_admin/general/isbn_attribute');
+                    echo self::getProductAttributeValue($product, $storeId, $isbnCode);
+                    echo "\t";
+                    //EAN
+                    $eanCode = Mage::getStoreConfig('turnto_admin/general/ean_attribute');
+                    echo self::getProductAttributeValue($product, $storeId, $eanCode);
+                    echo "\t";
+                    //JAN
+                    $janCode = Mage::getStoreConfig('turnto_admin/general/jan_attribute');
+                    echo self::getProductAttributeValue($product, $storeId, $janCode);
+                    echo "\t";
+                    //ASIN
+                    $asinCode = Mage::getStoreConfig('turnto_admin/general/asin_attribute');
+                    echo self::getProductAttributeValue($product, $storeId, $asinCode);
+
                     echo "\n";
                 }
                 $page++;
@@ -163,6 +188,18 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     echo "Y";
                     echo "\t";
                     //BRAND
+                    echo "\t";
+                    //UPC
+                    echo "\t";
+                    //MPN
+                    echo "\t";
+                    //ISBN
+                    echo "\t";
+                    //EAN
+                    echo "\t";
+                    //JAN
+                    echo "\t";
+                    //ASIN
                     echo "\n";
                 }
             }
@@ -173,6 +210,16 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
         return;
 
 
+    }
+
+    private function getProductAttributeValue($product, $storeId, $code) {
+        if ($code != null && $code != '') {
+            $attributeText =  $product->getData($code);
+            if ($attributeText != null) {
+                return $attributeText;
+            }
+        }
+        return '';
     }
 
     public function versionAction() {

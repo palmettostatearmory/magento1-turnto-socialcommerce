@@ -26,7 +26,9 @@ $TTpostalCode = $TTaddress->getPostcode();
 
 <script type="text/javascript">
     <?php
-    echo 'TurnToFeed.addFeedPurchaseOrder({orderId:"'.$TTorderId.'",email:"'.$TTemail.'",postalCode: "'.$TTpostalCode.'",firstName: "'.$TTfirstName.'", lastName: "'.$TTlastName.'" });';
+    echo 'var deliveryDate = new Date();';
+    echo 'deliveryDate.setDate(deliveryDate.getDate() + 30);';
+    echo 'TurnToFeed.addFeedPurchaseOrder({orderId:"'.$TTorderId.'",email:"'.$TTemail.'",postalCode: "'.$TTpostalCode.'",firstName: "'.$TTfirstName.'", lastName: "'.$TTlastName.'", "deliveryDate": deliveryDate });';
 
     foreach ($TTorder->getAllItems() as $item) {
        $TTproduct = Mage::getModel('catalog/product')->load($item->getProductId());
@@ -38,7 +40,6 @@ $TTpostalCode = $TTaddress->getPostcode();
        }
        $TTurl= Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . 'index.php/' . $TTproduct->getUrlPath();
        $TTimageUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . 'media/catalog/product'.$TTproduct->getImage();
-
        echo 'TurnToFeed.addFeedLineItem({title: "'.$this->escapeHtml($TTproduct->getName()).'", url: "'.$TTurl.'",sku:"'.$this->escapeHtml($TTproduct->getSku()).'", price:"'.$this->escapeHtml($TTproduct->getPrice()).'",itemImageUrl:"'.$this->escapeHtml($TTimageUrl).'"});';
     }
 

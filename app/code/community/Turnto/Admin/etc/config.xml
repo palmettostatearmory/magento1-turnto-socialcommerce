@@ -145,6 +145,12 @@
                 <static_cache_time>900</static_cache_time>
                 <teaser_cache_time>900</teaser_cache_time>
                 <version>4.3</version>
+                <upc_attribute nil="true"/>
+                <mpn_attribute nil="true"/>
+                <isbn_attribute nil="true"/>
+                <ean_attribute nil="true"/>
+                <jan_attribute nil="true"/>
+                <asin_attribute nil="true"/>
             </general>
             <checkoutcomments>
                 <checkoutcomments_enabled>1</checkoutcomments_enabled>
