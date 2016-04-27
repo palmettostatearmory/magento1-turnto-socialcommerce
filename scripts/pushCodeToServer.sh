@@ -18,7 +18,6 @@ then
   ssh -i $keyfile $user@$server "$pathtomagento/cleanMagento.sh $pathtomagento"
 else
   scp -r -i $keyfile ../app $user@$server:$pathtomagento
-  scp -r -i $keyfile ../var $user@$server:$pathtomagento
 fi
 
 

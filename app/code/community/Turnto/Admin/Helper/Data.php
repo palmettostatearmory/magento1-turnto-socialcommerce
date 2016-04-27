@@ -290,7 +290,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         $logFile = 'turnto_historical_feed_job.log';
 
         Mage::log('Started pushHistoricalOrdersFeed', null, $logFile);
-        
+
         try {
             $fileName = 'magento_auto_histfeed.csv';
             $storeId = Mage::getStoreConfig('turnto_admin/general/storeId');
@@ -317,12 +317,6 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                 return;
             }
 
-            $fields = array('siteKey' => $siteKey, 'authKey' => $authKey, 'feedStyle' => $feedStyle, 'file' => "@$file");
-            $fields_string = '';
-            foreach ($fields as $key => $value) {
-                $fields_string .= $key . '=' . $value . '&';
-            }
-            rtrim($fields_string, '&');
             if (!file_exists($file)) {
                 Mage::log('Could not find the newly created historical feed file. Are the write permission correct on /media/turnto?', null, $logFile);
                 return;

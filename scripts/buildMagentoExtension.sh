@@ -3,12 +3,20 @@
 if [ $(git status | grep "modified:" -c) -ne 0 ]
 then
   echo "\n*** Found modified files in your path. Please commit and push before building the magento extension.\n"
-  //exit
+  # todo: uncomment following line
+  #exit
 fi
 
-tar cf turnto-magento-extension.tar /Users/jherring/work/turnto/projects/magento-extension/app
-mkdir ../build
-mv turnto-magento-extension.tar ../build
+cd ..
+tar cf build/turnto-magento-extension.tar app
+if [ -a ../build ]
+then
+  echo build directory exists... not creating it
+else
+  mkdir ../build
+fi
+cd scripts
+
 php ./lib/magento-tar-to-connect.php ./conf/magento-connect-config.php
 
 # create release if user supplied tag

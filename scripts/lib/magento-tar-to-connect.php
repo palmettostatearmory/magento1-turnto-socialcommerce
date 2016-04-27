@@ -262,7 +262,7 @@ class Pulsestorm_MagentoTarToConnect
         foreach($configs as $file)
         {
             $xml = simplexml_load_file($file);
-            $version_strings = $xml->xpath('//package/version');
+            $version_strings = $xml->xpath('modules//version');
             foreach($version_strings as $version)
             {
                 if($version != $extension_version)
