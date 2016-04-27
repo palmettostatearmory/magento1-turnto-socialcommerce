@@ -1,4 +1,6 @@
 <?php
+$releaseNotes = str_ireplace('<br>', '', file_get_contents(getcwd() . '/conf/releasenotes.txt'));
+
 return array(
 
 //The base_dir and archive_file path are combined to point to your tar archive
@@ -19,7 +21,7 @@ return array(
 
 //You can also have the package script use the version in the module you
 //are packaging with.
-    'auto_detect_version'   => true,
+    'auto_detect_version'    => false,
 
 //Where on your local system you'd like to build the files to
     'path_output'            => '/Users/jherring/work/turnto/projects/magento-extension/build',
@@ -36,7 +38,7 @@ return array(
 //Magento Connect information fields.
     'summary'                => 'Connect your shoppers to your customers',
     'description'            => 'The TurnTo Social Commerce Suite helps you put the good will you have earned from your customers to work by opening direct communications between your shoppers and your past customers.',
-    'notes'                  => 'TurnTo Admin Extension&#xD;\n&#xD;2.0 Adds support for Single Sign On&#xD;\n2.1 Re-wrote catalog feed generator&#xD;\n2.1.6 - Better catalog support in catalog feed generator.&#xD;\n2.2.0 - Support for sku average rating feed&#xD;\n2.2.2 - Minor bug fix&#xD;\n2.2.4 - Fixed excessive load time on configuration screen.&#xD;\n2.2.5 - Catalog Feed tweaks&#xD;\n2.2.7 - Support for Magento Security Patch (SUPEE-6788)&#xD;\n2.2.9 - Historical Feed bug fix&#xD;\n2.2.10 - Minor bug fix for historical feed exporter&#xD;\n2.2.11 - Fixed circular reference in category tree.  Optimized memory usage in catalog feed generator.&#xD;\n2.3.0 - Added ability to push the historical feed nightly&#xD;\n3.0 - Refactored all code into blocks that can easily be added to templates.  Almost all TurnTo functionality can now be easily configured from the Magento Admin Panel Configuration page.&#xD;\n3.0.1 - Minor bug fixes\n',
+    'notes'                  => $releaseNotes,
 //Magento Connect author information. If author_email is foo@example.com, script will
 //prompt you for the correct name.  Should match your http://www.magentocommerce.com/
 //login email address
