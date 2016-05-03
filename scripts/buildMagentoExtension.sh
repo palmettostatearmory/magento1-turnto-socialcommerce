@@ -7,11 +7,13 @@ then
   exit
 fi
 
-if [ $(git status | grep "modified:" -c) -ne 0 ]
+if [ $(git status | grep "modified:" -c) -ne 0 -o $(git status | grep "Your branch is ahead" -c) -ne 0 ]
 then
   echo "\n*** Found modified files in your path. Please commit and push before building the magento extension.\n"
   exit
 fi
+
+exit
 
 cd ..
 tar cf build/turnto-magento-extension.tar app
