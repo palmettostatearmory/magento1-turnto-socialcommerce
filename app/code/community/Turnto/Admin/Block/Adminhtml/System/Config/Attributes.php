@@ -14,9 +14,12 @@ class Turnto_Admin_Block_Adminhtml_System_Config_Attributes
 
         $attributesForDisplay = array();
 
+        array_push($attributesForDisplay, array('value' => '', 'label' => ''));
         foreach ($attributes as $productAttr) { /** @var Mage_Catalog_Model_Resource_Eav_Attribute $productAttr */
             if (in_array($productAttr->getBackendType(), self::$validTypes)) {
-                array_push($attributesForDisplay, array('value' => $productAttr->getAttributeCode(), 'label' => $productAttr->getFrontendLabel()));
+                if ($productAttr->getFrontendLabel() != null && $productAttr->getFrontendLabel() != '') {
+                    array_push($attributesForDisplay, array('value' => $productAttr->getAttributeCode(), 'label' => $productAttr->getFrontendLabel()));
+                }
             }
         }
 

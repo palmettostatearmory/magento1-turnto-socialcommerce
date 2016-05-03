@@ -15,3 +15,4 @@ TurnTo Admin Extension<br>
 3.0 - Refactored all code into blocks that can easily be added to templates.  Almost all TurnTo functionality can now be easily configured from the Magento Admin Panel Configuration page.<br>
 3.0.1 - Minor bug fixes<br>
 3.0.2 - Minor bug fixes<br>
+3.0.3 - Allow users to deselect GTINs
