@@ -13,3 +13,4 @@ TurnTo Admin Extension<br>
 2.2.11 - Fixed circular reference in category tree.  Optimized memory usage in catalog feed generator.<br>
 2.3.0 - Added ability to push the historical feed nightly<br>
 2.3.1 - Added UPC, MPN, EAN, ASIN, JAN and ISBN to TurnTo configuration screen and catalog feed
+2.3.2 - Allow users to deselect GTINs on configuration screen
