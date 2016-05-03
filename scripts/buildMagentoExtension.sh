@@ -13,8 +13,6 @@ then
   exit
 fi
 
-exit
-
 cd ..
 tar cf build/turnto-magento-extension.tar app
 if [ -a ../build ]
