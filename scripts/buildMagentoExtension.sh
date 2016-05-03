@@ -1,10 +1,16 @@
 #!/bin/sh
 
+source ../.turnto
+if [ -z "$githubToken" ]
+then
+  echo "Must set githubToken in <project dir>/.turnto.  Your GitHub token must be created through the GitHub API interface"
+  exit
+fi
+
 if [ $(git status | grep "modified:" -c) -ne 0 ]
 then
   echo "\n*** Found modified files in your path. Please commit and push before building the magento extension.\n"
-  # todo: uncomment following line
-  #exit
+  exit
 fi
 
 cd ..
@@ -33,7 +39,7 @@ then
 
     # make a call to github api to create a release
     curl -vi \
-      -H "Authorization: token 9bf639104ade6abdca8307aaf9168ca2ff187f11" \
+      -H "Authorization: token $githubToken" \
       -d '{"tag_name": "v'$1'", "target_commitish": "2_0", "name": "TurnTo Magento Extension '$1'", "body": "'"${body}"'", "draft": true, "prerelease": true}' \
       "https://api.github.com/repos/turnto/magento-extension/releases"
 
