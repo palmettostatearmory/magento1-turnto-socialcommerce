@@ -18,7 +18,7 @@ Before installing the Magento extension, follow these steps:
 4. Go to Turnto->Integration menu to configure the module
 5. Flush Cache and/or Compilation, if desired.
  
-# Installation using Modman
+## Installation using Modman
 
 1. On the command line, cd to your Magento installation
 2. Run these commands:
