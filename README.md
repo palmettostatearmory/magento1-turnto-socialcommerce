@@ -21,11 +21,7 @@ Before installing the Magento extension, follow these steps:
 ## Installation using Modman
 
 1. On the command line, cd to your Magento installation
-2. Run these commands:
-    ```
-    modman init
-    modman clone git@github.com:erikhansen/magento-extension.git
-    ```
+2. Run these commands: `modman init` and `modman clone git@github.com:turnto/Magento1_TurnTo_SocialCommerce.git`
 3. Login back to Magento admin panel
 4. Go to Turnto->Integration menu to configure the module
 5. Flush Cache and/or Compilation, if desired.
