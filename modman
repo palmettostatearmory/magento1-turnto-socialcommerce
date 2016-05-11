@@ -1,0 +1,10 @@
+app/code/community/Turnto/ app/code/community/Turnto/
+app/etc/modules/Turnto_Admin.xml app/etc/modules/Turnto_Admin.xml
+app/etc/modules/Turnto_Client.xml app/etc/modules/Turnto_Client.xml
+app/etc/modules/Turnto_Login.xml app/etc/modules/Turnto_Login.xml
+app/etc/modules/Turnto_Mobile.xml app/etc/modules/Turnto_Mobile.xml
+app/design/adminhtml/default/default/template/turnto/ app/design/adminhtml/default/default/template/turnto/
+app/design/frontend/base/default/layout/turnto_client.xml app/design/frontend/base/default/layout/turnto_client.xml
+app/design/frontend/base/default/layout/turnto_login.xml app/design/frontend/base/default/layout/turnto_login.xml
+app/design/frontend/base/default/layout/turnto_mobile.xml app/design/frontend/base/default/layout/turnto_mobile.xml
+app/design/frontend/base/default/template/turnto/ app/design/frontend/base/default/template/turnto/
