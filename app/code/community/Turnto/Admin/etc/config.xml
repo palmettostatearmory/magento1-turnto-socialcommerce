@@ -147,6 +147,7 @@
                 <ean_attribute nil="true"/>
                 <jan_attribute nil="true"/>
                 <asin_attribute nil="true"/>
+                <brand_attribute nil="true"/>
             </general>
         </turnto_admin>
     </default>   

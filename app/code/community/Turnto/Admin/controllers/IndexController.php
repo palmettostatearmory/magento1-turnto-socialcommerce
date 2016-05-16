@@ -40,6 +40,7 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
             $eanCode = Mage::getStoreConfig('turnto_admin/general/ean_attribute');
             $janCode = Mage::getStoreConfig('turnto_admin/general/jan_attribute');
             $asinCode = Mage::getStoreConfig('turnto_admin/general/asin_attribute');
+            $brandCode = Mage::getStoreConfig('turnto_admin/general/brand_attribute');
 
             do {
                 $collection = Mage::getModel('catalog/product')
@@ -72,7 +73,7 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                             self::pushValueIfNotNull($parentIdToGtins[$parentId]['asin'], self::getProductAttributeValue($product, $storeId, $asinCode));
                         }
                     } else {
-                        self::outputProduct($product, $parentIdToGtins, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode);
+                        self::outputProduct($product, $parentIdToGtins, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode, $brandCode);
                     }
                 }
                 $page++;
@@ -100,7 +101,7 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     ->setCurPage($page);
 
                 foreach ($collection as $product) {
-                    self::outputProduct($product, $parentIdToGtins, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode);
+                    self::outputProduct($product, $parentIdToGtins, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode, $brandCode);
                 }
                 $page++;
                 $collection->clear();
@@ -183,7 +184,7 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
         return '';
     }
 
-    private function outputProduct($product, $parentIdToGtins, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode) {
+    private function outputProduct($product, $parentIdToGtins, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode, $brandCode) {
         //SKU
         echo $product->getSku();
         echo "\t";
@@ -235,8 +236,8 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
         //ISCATEGORY
         echo "n";
         echo "\t";
-        //BRAND
-        echo $product->getAttributeText('manufacturer');
+        //Brand
+        echo self::getProductAttributeValue($product, $storeId, $brandCode);
         echo "\t";
         $productId = $product->getId();
         if ($parentIdToGtins[$productId]) {
@@ -258,7 +259,6 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
             echo "\t";
             // ASINs rolled up
             echo self::getGTINsCommaSeparated($parentIdToGtins[$productId]['asin']);
-            echo "\t";
         } else {
             // this is a simple product just output the single GTINs
             //UPC

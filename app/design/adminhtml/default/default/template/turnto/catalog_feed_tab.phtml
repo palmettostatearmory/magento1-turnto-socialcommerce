@@ -1,17 +1,15 @@
 <h4>Catalog Feed</h4>
-<p style="width:650px">Go to your Settings in TurnTo Management area and enter:
+<p>Go to your Settings in the TurnTo Admin console and enter the following in the <b>Catalog Feed Url</b> input field:
 <br>
  <i><?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'turntocatalogfeed';?><?php if(count(Mage::registry('websites')) > 1) { ?>?websiteId=WEBSITE_ID<?php } ?><?php if(count(Mage::registry('stores')) > 1) { ?>&storeId=STORE_ID<?php } ?></i>
 <br>
+This will set up the automation of the catalog feed in order to keep you products up to date.
 <?php if(count(Mage::registry('stores')) > 1 || count(Mage::registry('websites'))) { ?>
-<b>NOTE: You appear to have multiple sites or stores on your magento installation so you will need to supply a scope in the URL.  Replace <i>WEBSITE_ID</i> and <i>STORE_ID</i> in the url above with the appropriate values from the list below (just the number. For instance: websiteId=1&storeId=1)</b>
+<br>
+	<b>NOTE: You appear to have multiple sites or stores on your magento installation so you will need to supply a scope in the URL.  Replace <i>WEBSITE_ID</i> and <i>STORE_ID</i> in the url above with the appropriate values from the list below (just the number. For instance: websiteId=1&storeId=1)</b>
 <br>
 <?php } ?>
-<br>
- in the <b>Catalog Feed Url:</b> input field.
-<br>
-<br>
- This will set up the automation of the catalog feed in order to keep you products up to date. </p>
+</p>
 <br>
 
 <!--<form id="cat_feed_form" name="cat_feed_form" method="post" action="--><?php //echo $this->getUrl('*/*/post') ?><!--">-->
