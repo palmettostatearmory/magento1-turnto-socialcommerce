@@ -14,3 +14,4 @@ TurnTo Admin Extension<br>
 2.3.0 - Added ability to push the historical feed nightly<br>
 2.3.1 - Added UPC, MPN, EAN, ASIN, JAN and ISBN to TurnTo configuration screen and catalog feed
 2.3.2 - Allow users to deselect GTINs on configuration screen
+2.3.3 - Added Brand to the TurnTo configuration screen as a configurable attribute, which is included in the catalog feed.
