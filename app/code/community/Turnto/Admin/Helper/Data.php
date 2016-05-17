@@ -203,7 +203,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                 $itemlineid = 0;
                 foreach ($order->getAllVisibleItems() as $item) {
                     //ORDERID
-                    fwrite($handle, $order->getRealOrderId());
+                    fwrite($handle, $order->getId());
                     fwrite($handle, "\t");
                     //ORDERDATE
                     fwrite($handle, $order->getCreatedAtDate()->toString('Y-MM-d'));
@@ -272,7 +272,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             $items = $shipment->getItemsCollection();
             foreach ($items as $it) {
                 // check if this shipment contains the item that was passed in
-                if ($item->getId() == $it->getId()) {
+                if ($item->getId() == $it->getOrderItemId()) {
                     return $shipment->getCreatedAtDate();
                 }
             }
