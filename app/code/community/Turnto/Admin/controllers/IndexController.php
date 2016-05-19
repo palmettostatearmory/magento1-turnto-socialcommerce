@@ -176,7 +176,10 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
 
     private function getProductAttributeValue($product, $storeId, $code) {
         if ($code != null && $code != '') {
-            $attributeText =  $product->getData($code);
+            $attributeText = $product->getAttributeText($code);
+            if (!$attributeText) {
+                $attributeText = $product->getData($code);
+            }
             if ($attributeText != null) {
                 return $attributeText;
             }

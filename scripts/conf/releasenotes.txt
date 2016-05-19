@@ -15,3 +15,4 @@ TurnTo Admin Extension<br>
 2.3.1 - Added UPC, MPN, EAN, ASIN, JAN and ISBN to TurnTo configuration screen and catalog feed<br>
 2.3.2 - Allow users to deselect GTINs on configuration screen<br>
 2.3.3 - Added Brand to the TurnTo configuration screen as a configurable attribute, which is included in the catalog feed.<br>
+2.3.4 - Allow all types of attributes in the brand drop-down, not just varchar.<br>
