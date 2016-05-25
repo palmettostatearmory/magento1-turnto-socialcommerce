@@ -16,3 +16,4 @@ TurnTo Admin Extension<br>
 3.0.1 - Minor bug fixes<br>
 3.0.2 - Minor bug fixes<br>
 3.0.3 - Allow users to deselect GTINs
+3.0.4 - Allow users to configure attribute used as brand
