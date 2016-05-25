@@ -41,7 +41,7 @@ then
     curl -vi \
       -H "Authorization: token $githubToken" \
       -d '{"tag_name": "v'$1'", "target_commitish": "master", "name": "TurnTo Magento Extension '$1'", "body": "'"${body}"'", "draft": true, "prerelease": true}' \
-      "https://api.github.com/repos/turnto/magento-extension/releases"
+      "https://api.github.com/repos/turnto/magento1-turnto-socialcommerce/releases"
 
     echo "REMINDER: Can not attach files via the API so you'll need to manually upload the packaged magento extension to the release"
   else

@@ -3,7 +3,7 @@
 <config>
     <modules>
         <Turnto_Admin>
-            <version>3.0.2</version>
+            <version>3.0.3</version>
         </Turnto_Admin>
     </modules> 
 
@@ -151,6 +151,7 @@
                 <ean_attribute nil="true"/>
                 <jan_attribute nil="true"/>
                 <asin_attribute nil="true"/>
+                <brand_attribute nil="true"/>
             </general>
             <checkoutcomments>
                 <checkoutcomments_enabled>1</checkoutcomments_enabled>
