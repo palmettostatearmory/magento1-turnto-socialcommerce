@@ -10,8 +10,8 @@
     };
 </script>
 
-<script type="text/javascript" src="<?php echo Mage::getStoreConfig('turnto_admin/general/static_url')?>/tra<?php echo $helper->getVersionForPath()?>/turntoFeed.js"></script>
-<script type="text/javascript" src="<?php echo Mage::getStoreConfig('turnto_admin/general/static_url')?>/traServer<?php echo $helper->getVersionForPath()?>/trajs/<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>/tra.js"></script>
+<script type="text/javascript" src="//<?php echo $helper->getStaticHostWithoutProtocol(); ?>/tra<?php echo $helper->getVersionForPath()?>/turntoFeed.js"></script>
+<script type="text/javascript" src="//<?php echo $helper->getStaticHostWithoutProtocol(); ?>/traServer<?php echo $helper->getVersionForPath()?>/trajs/<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>/tra.js"></script>
 
 <?php
 $TTorderId = Mage::getSingleton('checkout/type_onepage')->getCheckout()->getLastOrderId();

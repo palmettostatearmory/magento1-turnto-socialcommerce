@@ -17,3 +17,4 @@ TurnTo Admin Extension<br>
 3.0.2 - Minor bug fixes<br>
 3.0.3 - Allow users to deselect GTINs
 3.0.4 - Allow users to configure attribute used as brand
+3.0.5 - Fixed security warning on checkout success page caused by using http instead of https
