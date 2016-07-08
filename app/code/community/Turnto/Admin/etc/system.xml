@@ -113,6 +113,18 @@
                                 (15 minutes)
                             </comment>
                         </teaser_cache_time>
+                        <cc_display_cache_time>
+                            <label>Checkout Chatter Display Widget Cache Time</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>The amount of time to cache the Checkout Chatter Display Widget. Value is in seconds. Default is 900
+                                (15 minutes)
+                            </comment>
+                        </cc_display_cache_time>
                         <!-- UPC -->
                         <upc_attribute>
                             <label>UPC Attribute</label>
@@ -192,10 +204,10 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
-                    <expanded>1</expanded>
+                    <expanded>0</expanded>
                     <fields>
                         <checkoutcomments_enabled>
-                            <label>Enabled Checkout Comments</label>
+                            <label>Enabled Checkout Comments (on checkout confirmation page)</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>1</sort_order>
@@ -203,6 +215,166 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </checkoutcomments_enabled>
+                        <checkoutcomments_display_enabled>
+                            <label>Enabled Checkout Comments Display Widget (on PDP)</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[You'll need to place the following code on your product details page in the position where you'd like the widget to appear:<br />
+                            &lt;?php echo $this-&gt;getChildHtml('turnto_cc_pdp') ?&gt;]]></comment>
+                        </checkoutcomments_display_enabled>
+                        <cc_columns>
+                            <label>Display Widget Columns</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>Turnto_Admin_Block_Adminhtml_System_Config_Cccolumns</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>Number of columns.  Can be 1, 2, 3, 4, or Auto.  'Auto' detects the available width and chooses the best number of columns for you.</comment>
+                        </cc_columns>
+                        <cc_rows_collapsed>
+                            <label>Display Widget Rows in collapsed view</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is 2) - Number of rows displayed after "Read all" is selected.  This value should be less than rowsInExpandedView.</comment>
+                        </cc_rows_collapsed>
+                        <cc_rows_expanded>
+                            <label>Display Widget Rows in expanded view</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is 10) - Number of rows displayed after "Read all" is selected.</comment>
+                        </cc_rows_expanded>
+                        <cc_title>
+                            <label>Display Widget Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is "Why I Chose This:") - Title displayed at the top of the widget</comment>
+                        </cc_title>
+                        <cc_expand_text>
+                            <label>Display Widget Expanded Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is "Read More") - Link label in top right corner for expanding the widget.</comment>
+                        </cc_expand_text>
+                        <cc_collaped_text>
+                            <label>Display Widget Collapsed Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is "Read Less") - Link label in top right corner for collapsing the widget.</comment>
+                        </cc_collaped_text>
+                        <cc_pagination_prev_text>
+                            <label>Display Widget Pagination 'Previous' Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is "Previous") - The label for the Previous link used in pagination</comment>
+                        </cc_pagination_prev_text>
+                        <cc_pagination_next_text>
+                            <label>Display Widget Pagination 'Next' Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is "Next") - The label for the Next link used in pagination. </comment>
+                        </cc_pagination_next_text>
+                        <cc_minimum_comment_count>
+                            <label>Display Widget Minimum Comment Count (hidden if less)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is 4) - Minimum number of comments required to display widget.  The widget is hidden if less than the minimum are available.</comment>
+                        </cc_minimum_comment_count>
+                        <cc_minimum_comment_character_count>
+                            <label>Display Widget Minimum Comment Character Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is 20) - Comments with less characters than this minimum will not be displayed or included in the counts.</comment>
+                        </cc_minimum_comment_character_count>
+                        <cc_minimum_comment_word_count>
+                            <label>Display Widget Minimum Comment Word Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>110</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is 3) -  Comments with less words than this minimum will not be displayed or included in the counts.</comment>
+                        </cc_minimum_comment_word_count>
+                        <cc_truncate_length>
+                            <label>Display Widget Comment Truncate Length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>120</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is 200) - The text of the comment will be truncated to this length.</comment>
+                        </cc_truncate_length>
+                        <cc_include_syndicated>
+                            <label>Display Widget Include Syndicated Comments</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is Yes) - Determines whether syndicated comments will be displayed in the widget.  A syndicated comment is a comment that came from a source other than your website.</comment>
+                        </cc_include_syndicated>
+                        <cc_sort_order>
+                            <label>Display Widget Sort Order</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>Turnto_Admin_Block_Adminhtml_System_Config_Ccsortorder</source_model>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is "Most Recent") - "Most Recent" orders the comments from newest to oldest.  "Longest" orders the comments from longest to shortest.</comment>
+                        </cc_sort_order>
                     </fields>
                 </checkoutcomments>
                 <qa>
@@ -223,6 +395,15 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </qa_setup_type>
+                        <qa_teaser_type>
+                            <label>Q&amp;A Teaser Type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>Turnto_Admin_Block_Adminhtml_System_Config_Teasertype</source_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </qa_teaser_type>
                         <qa_teaser_custom_enabled>
                             <label>Use Custom Q&amp;A Teaser</label>
                             <frontend_type>select</frontend_type>
