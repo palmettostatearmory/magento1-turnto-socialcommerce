@@ -568,7 +568,7 @@
                             <depends><vc_gallery_enabled>1</vc_gallery_enabled></depends>
                         </showCaptionsInline>
                         <truncateLength>
-                            <label>Truncate Lenth</label>
+                            <label>Truncate Length</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>60</sort_order>
                             <show_in_default>1</show_in_default>
@@ -590,7 +590,7 @@
                             <validate>validate-number</validate>
                         </minimumContentCount>
                         <minimumTextContentCharacterCount>
-                            <label>Truncate Lenth</label>
+                            <label>Minimum Text Content Character Count</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>80</sort_order>
                             <show_in_default>1</show_in_default>
@@ -761,7 +761,7 @@
                             <depends><enabled>1</enabled></depends>
                         </nameMaxLength>
                         <sortOrder>
-                            <label>Maximum Name Length</label>
+                            <label>Sort Order</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>120</sort_order>
                             <show_in_default>1</show_in_default>
