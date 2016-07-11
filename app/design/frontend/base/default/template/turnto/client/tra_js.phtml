@@ -46,6 +46,19 @@
             sortOrder: '<?php echo Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_sort_order') ?>'
         }
         <?php endif; ?>
+        <?php if (intval(Mage::getStoreConfig('turnto_admin/vcgallery/vc_gallery_enabled')) == 1): ?>
+        ,gallery: {
+            title: "<?php echo Mage::getStoreConfig('turnto_admin/vcgallery/title') ?>",
+            size: "<?php echo Mage::getStoreConfig('turnto_admin/vcgallery/size') ?>",
+            modalSize: "<?php echo Mage::getStoreConfig('turnto_admin/vcgallery/modalSize') ?>",
+            showCaptionsInline: <?php echo Mage::getStoreConfig('turnto_admin/vcgallery/showCaptionsInline') == 1 ? 'true' : 'false'?>,
+            truncateLength: <?php echo Mage::getStoreConfig('turnto_admin/vcgallery/truncateLength') ?>,
+            minimumContentCount: <?php echo Mage::getStoreConfig('turnto_admin/vcgallery/minimumContentCount') ?>,
+            minimumTextContentCharacterCount: <?php echo Mage::getStoreConfig('turnto_admin/vcgallery/minimumTextContentCharacterCount') ?>,
+            minimumTextContentWordCount: <?php echo Mage::getStoreConfig('turnto_admin/vcgallery/minimumTextContentWordCount') ?>,
+            sortOrder: "<?php echo Mage::getStoreConfig('turnto_admin/vcgallery/sortOrder') ?>",
+        }
+        <?php endif; ?>
     };
     (function () {
         var tt = document.createElement('script');
@@ -66,8 +79,18 @@
         })();
     <?php endif; ?>
 
+    <?php if (intval(Mage::getStoreConfig('turnto_admin/vcgallery/vc_gallery_enabled')) == 1): ?>
+        var TurnToGallerySkus = ['<?php echo $TTSKU ?>'];
+
+        (function() {
+            var tt = document.createElement('script'); tt.type = 'text/javascript'; tt.async=true;
+            tt.src = "//<?php echo $helper->getStaticHostWithoutProtocol() ?>/traServer<?php echo $helper->getVersionForPath()?>/galleryjs/" + turnToConfig.siteKey + "/turnto-gallery.js";
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(tt, s);
+        })();
+    <?php endif; ?>
+
     var TurnToItemSku = "<?php echo $TTSKU ?>";
 </script>
 
-<script type="text/javascript" src="<?php echo Mage::getStoreConfig('turnto_admin/general/static_url')?>/sitedata/<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>/v4_2/<?php echo $TTSKU?>/d/itemjs"></script>
+<script type="text/javascript" src="<?php echo Mage::getStoreConfig('turnto_admin/general/static_url')?>/sitedata/<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>/v<?php echo $helper->getVersionForPath()?>/<?php echo $TTSKU?>/d/itemjs"></script>
 

@@ -31,5 +31,15 @@
                 </checkout_cart_index>
             </updates>
         </layout>
+
+        <routers>
+            <turntopinboard>
+                <use>standard</use>
+                <args>
+                    <module>Turnto_Client</module>
+                    <frontName>pinboard</frontName>
+                </args>
+            </turntopinboard>
+        </routers>
     </frontend>
 </config>

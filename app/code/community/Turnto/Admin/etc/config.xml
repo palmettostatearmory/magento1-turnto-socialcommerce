@@ -145,6 +145,7 @@
                 <static_cache_time>900</static_cache_time>
                 <teaser_cache_time>900</teaser_cache_time>
                 <cc_display_cache_time>900</cc_display_cache_time>
+                <vcgallery_cache_time>900</vcgallery_cache_time>
                 <version>4.3</version>
                 <upc_attribute nil="true"/>
                 <mpn_attribute nil="true"/>
@@ -249,6 +250,55 @@
                 ]]></reviews_teaser_custom>
                 <reviews_teaser_custom_function_name>reviewsItemTeaserDisplay</reviews_teaser_custom_function_name>
             </reviews>
+            <vcgallery>
+                    <vc_gallery_enabled>0</vc_gallery_enabled>
+                    <title>Customer Gallery</title>
+                    <size>small</size>
+                    <modalSize>small</modalSize>
+                    <showCaptionsInline>0</showCaptionsInline>
+                    <truncateLength>40</truncateLength>
+                    <minimumContentCount>1</minimumContentCount>
+                    <minimumTextContentCharacterCount>0</minimumTextContentCharacterCount>
+                    <minimumTextContentWordCount>0</minimumTextContentWordCount>
+                    <sortOrder>mostvotes</sortOrder>
+            </vcgallery>
+            <vcpinboard>
+                <enabled>0</enabled>
+                <title>Customer Gallery</title>
+                <skus></skus>
+                <brands></brands>
+                <tags></tags>
+                <activeOnly>0</activeOnly>
+                <showDatestamp>1</showDatestamp>
+                <showCaption>1</showCaption>
+                <minCaptionCharCount>0</minCaptionCharCount>
+                <minCaptionWordCount>0</minCaptionWordCount>
+                <maxCaptionLength>85</maxCaptionLength>
+                <nameMaxLength>255</nameMaxLength>
+                <sortOrder>0</sortOrder>
+                <limit>20</limit>
+                <progressiveLoading>1</progressiveLoading>
+                <hSpacing>8</hSpacing>
+                <vSpacing>8</vSpacing>
+            </vcpinboard>
+            <ccpinboard>
+                <enabled>0</enabled>
+                <title>Customer Comments</title>
+                <skus></skus>
+                <brands></brands>
+                <tags></tags>
+                <activeOnly>0</activeOnly>
+                <includeSyndicated>0</includeSyndicated>
+                <titleMaxLength>255</titleMaxLength>
+                <maxDaysOld>30</maxDaysOld>
+                <maxCommentsPerBox>5</maxCommentsPerBox>
+                <nameMaxLength>255</nameMaxLength>
+                <commentMaxLength>200</commentMaxLength>
+                <limit>20</limit>
+                <progressiveLoading>1</progressiveLoading>
+                <hSpacing>8</hSpacing>
+                <vSpacing>8</vSpacing>
+            </ccpinboard>
         </turnto_admin>
     </default>   
     <crontab>
