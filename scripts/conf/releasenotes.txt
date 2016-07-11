@@ -17,3 +17,4 @@ TurnTo Admin Extension<br>
 2.3.3 - Added Brand to the TurnTo configuration screen as a configurable attribute, which is included in the catalog feed.<br>
 2.3.4 - Allow all types of attributes in the brand drop-down, not just varchar.<br>
 2.3.5 - Exclude Attribute Values from catalog feed if they are 'NULL'<br>
+2.3.6 - Historical orders field broken by virtual product orders.<br>
