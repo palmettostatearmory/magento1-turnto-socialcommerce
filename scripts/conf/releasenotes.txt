@@ -20,3 +20,4 @@ TurnTo Admin Extension<br>
 3.0.5 - Fixed security warning on checkout success page caused by using http instead of https<br>
 3.1.0 - Added support for Comment Capture Display widget, VC Gallery Widget, VC Pinboard, and CC Pinboard. Q&A teaser is now configurable (input teaser or normal teaser). Comment Capture is embedded on mobile.<br>
 3.1.1 - Minor bug fix.<br>
+3.1.2 - Delivery date wasn't being set properly in some cases. <br>
