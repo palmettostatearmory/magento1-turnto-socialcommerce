@@ -243,7 +243,7 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
         echo self::getProductAttributeValue($product, $storeId, $brandCode);
         echo "\t";
         $productId = $product->getId();
-        if ($parentIdToGtins[$productId]) {
+        if (isset($parentIdToGtins[$productId])) {
             // this product is a parent for another product.  roll-up the GTINs
             // UPCs rolled up
             echo self::getGTINsCommaSeparated($parentIdToGtins[$productId]['upc']);
