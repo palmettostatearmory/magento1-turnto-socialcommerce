@@ -20,6 +20,12 @@ class Turnto_Admin_Model_Observer
             $helper->pushHistoricalOrdersFeed();
         }
     }
- 
- 
+
+    public function pushCatalogFeed() {
+        $helper = Mage::helper('adminhelper1');
+
+        if ($helper->isCatalogFeedPushEnabled()) {
+            $helper->pushCatalogFeed();
+        }
+    }
 }
