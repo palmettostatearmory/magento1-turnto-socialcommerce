@@ -13,7 +13,11 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
     }
 
     public function isHistoricalOrderFeedPushEnabled() {
-        return Mage::getStoreConfig('turnto_admin/historicalfeedconfig/enabled') != null;
+        return Mage::getStoreConfig('turnto_admin/historicalfeedconfig/enabled') == 1;
+    }
+
+    public function isCatalogFeedPushEnabled() {
+        return Mage::getStoreConfig('turnto_admin/catalogfeedconfig/enabled') == 1;
     }
 
     public function checkFeed($url = null)
@@ -170,6 +174,322 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         return $updated;
     }
 
+    public function generateCatalogFeed($websiteId, $storeId, $fileName) {
+        try {
+            $logFile = 'turnto_catalog_feed_job.log';
+
+            if (!isset($storeId)) {
+                $storeId = 1;
+            }
+
+            if (isset($websiteId)) {
+                $websiteId = 1;
+            }
+
+            $path = Mage::getBaseDir('media') . DS . 'turnto/';
+            if (!file_exists($path)) {
+                mkdir($path, 0766);
+            }
+
+            $fh = fopen($path . $fileName, 'w');
+
+            if (!$fh) {
+                Mage::throwException($this->__('Could not create historical feed file in directory ' . $path));
+            }
+
+            fwrite($fh, "SKU\tIMAGEURL\tTITLE\tPRICE\tCURRENCY\tACTIVE\tITEMURL\tCATEGORY\tKEYWORDS\tREPLACEMENTSKU\tINSTOCK\tVIRTUALPARENTCODE\tCATEGORYPATHJSON\tISCATEGORY\tBRAND\tUPC\tMPN\tISBN\tEAN\tJAN\tASIN");
+            fwrite($fh, "\n");
+
+            $pageSize = 25;
+            $count = Mage::getModel('catalog/product')
+                ->getCollection()
+                ->addStoreFilter($storeId)
+                ->addWebsiteFilter($websiteId)
+                ->addAttributeToFilter('type_id', array('eq' => 'simple'))
+                ->getSize();
+
+            // other products
+            $otherProductsCount = Mage::getModel('catalog/product')
+                ->getCollection()
+                ->addStoreFilter($storeId)
+                ->addWebsiteFilter($websiteId)
+                ->addAttributeToFilter('type_id', array('neq' => 'simple'))
+                ->getSize();
+
+            $page = 1;
+            $pages = ceil($count / $pageSize);
+            $upcCode = Mage::getStoreConfig('turnto_admin/general/upc_attribute');
+            $mpnCode = Mage::getStoreConfig('turnto_admin/general/mpn_attribute');
+            $isbnCode = Mage::getStoreConfig('turnto_admin/general/isbn_attribute');
+            $eanCode = Mage::getStoreConfig('turnto_admin/general/ean_attribute');
+            $janCode = Mage::getStoreConfig('turnto_admin/general/jan_attribute');
+            $asinCode = Mage::getStoreConfig('turnto_admin/general/asin_attribute');
+            $brandCode = Mage::getStoreConfig('turnto_admin/general/brand_attribute');
+
+            do {
+                $collection = Mage::getModel('catalog/product')
+                    ->getCollection()
+                    ->addAttributeToSelect('*')
+                    ->addWebsiteFilter($websiteId)
+                    ->addStoreFilter($storeId)
+                    ->addAttributeToFilter('type_id', array('eq' => 'simple'))
+                    ->setPageSize($pageSize)
+                    ->setCurPage($page);
+
+                foreach ($collection as $product) {
+                    $parents = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
+                    if (isset($parents[0])) {
+                        // skip
+                    } else {
+                        self::outputProduct($fh, $product, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode, $brandCode);
+                    }
+                }
+                $page++;
+                $collection->clear();
+            } while ($page <= $pages);
+
+            $page = 1;
+            $pages = ceil($otherProductsCount / $pageSize);
+
+            do {
+                $collection = Mage::getModel('catalog/product')
+                    ->getCollection()
+                    ->addAttributeToSelect('*')
+                    ->addWebsiteFilter($websiteId)
+                    ->addStoreFilter($storeId)
+                    ->addAttributeToFilter('type_id', array('neq' => 'simple'))
+                    ->setPageSize($pageSize)
+                    ->setCurPage($page);
+
+                foreach ($collection as $product) {
+                    self::outputProduct($fh, $product, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode, $brandCode);
+                }
+                $page++;
+                $collection->clear();
+            } while ($page <= $pages);
+
+
+            $categories = Mage::getModel('catalog/category')->setStoreId($storeId)->getCollection()->addAttributeToSelect('*');
+            if ($categories) {
+                foreach ($categories as $category) {
+                    $category->setStoreId($storeId);
+                    fwrite($fh, 'mag_category_'.$category->getId());
+                    fwrite($fh, "\t");
+                    //IMAGEURL
+                    fwrite($fh, "\t");
+                    //TITLE
+                    fwrite($fh, $category->getName());
+                    fwrite($fh, "\t");
+                    //PRICE
+                    fwrite($fh, "\t");
+                    //CURRENCY
+                    fwrite($fh, "\t");
+                    //ACTIVE
+                    fwrite($fh, "Y");
+                    fwrite($fh, "\t");
+                    //ITEMURL
+                    fwrite($fh, $category->getUrl());
+                    fwrite($fh, "\t");
+                    //CATEGORY
+                    fwrite($fh, $category->getParentCategory()->getId() ? 'mag_category_'.$category->getParentCategory()->getId() : '');
+                    fwrite($fh, "\t");
+                    //KEYWORDS
+                    fwrite($fh, "\t");
+                    //REPLACEMENTSKU
+                    fwrite($fh, "\t");
+                    //VIRTUALPARENTCODE
+                    fwrite($fh, "\t");
+                    //INSTOCK
+                    fwrite($fh, "\t");
+                    //CATEGORYPATHJSON
+                    fwrite($fh, "\t");
+                    //ISCATEGORY
+                    fwrite($fh, "Y");
+                    fwrite($fh, "\t");
+                    //BRAND
+                    fwrite($fh, "\t");
+                    //UPC
+                    fwrite($fh, "\t");
+                    //MPN
+                    fwrite($fh, "\t");
+                    //ISBN
+                    fwrite($fh, "\t");
+                    //EAN
+                    fwrite($fh, "\t");
+                    //JAN
+                    fwrite($fh, "\t");
+                    //ASIN
+                    fwrite($fh, "\n");
+                }
+            }
+        } catch (Exception $e) {
+            Mage::log($e->getMessage(), null, $logFile);
+        }
+
+        return;
+    }
+
+    private function getGTINsCommaSeparated($gtins) {
+        return join(',', $gtins);
+    }
+
+    private function getProductAttributeValue($product, $code, $storeId) {
+        if ($code != null && $code != '') {
+            $attributeText = $product->getAttributeText($code);
+
+            if ($attributeText == null) {
+                $attributeText = $product->getData($code);
+            }
+
+            if ($attributeText == null) {
+                $attributeText = Mage::getResourceModel('catalog/product')->getAttributeRawValue($product->getId(), $code, $storeId);
+            }
+
+            Mage::log('$attributeText: ' .$attributeText, null, 'test_log.log');
+            if ($attributeText != null || strcasecmp($attributeText, 'NULL') != 0) {
+                return $attributeText;
+            }
+        }
+
+        return '';
+    }
+
+    private function outputProduct($fh, $product, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode, $brandCode) {
+        //SKU
+        fwrite($fh, $product->getSku());
+        fwrite($fh, "\t");
+
+        $childProducts = null;
+        if ($product->isConfigurable()) {
+            $childProducts = Mage::getModel('catalog/product_type_configurable')
+                ->getUsedProducts(null, $product);
+        }
+
+        //echo Mage::getModel('catalog/product_media_config')->getMediaUrl( $product->getImage() );
+        // IMAGEURL
+        $imageUrl = null;
+        if ($product->getImage() != null && $product->getImage() != "no_selection") {
+            $imageUrl = Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getImage());
+        } else if ($product->getSmallImage() != null && $product->getSmallImage() != "no_selection") {
+            $imageUrl = Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getSmallImage());
+        } else if ($product->getThumbnail() != null && $product->getThumbnail() != "no_selection") {
+            $imageUrl = Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getThumbnail());
+        }
+        if (!$imageUrl) {
+            fwrite($fh, $product->getImageUrl());
+        } else {
+            fwrite($fh, $imageUrl);
+        }
+
+        fwrite($fh, "\t");
+        //TITLE
+        fwrite($fh, $product->getName());
+        fwrite($fh, "\t");
+        //PRICE
+        fwrite($fh, $product->getPrice());
+        fwrite($fh, "\t");
+        //CURRENCY
+        fwrite($fh, "\t");
+        //ACTIVE
+        fwrite($fh, 'Y');
+        fwrite($fh, "\t");
+        //ITEMURL
+        fwrite($fh, $product->getProductUrl());
+        fwrite($fh, "\t");
+        //CATEGORY
+        $ids = $product->getCategoryIds();
+        fwrite($fh,(isset($ids[0]) ? 'mag_category_'.$ids[0] : ''));
+        fwrite($fh, "\t");
+        // KEYWORDS
+        fwrite($fh, "\t");
+        // REPLACEMENTSKU
+        fwrite($fh, "\t");
+        //VIRTUALPARENTCODE
+        fwrite($fh, "\t");
+        //INSTOCK
+        fwrite($fh, "\t");
+        //CATEGORYPATHJSON
+        fwrite($fh, "\t");
+        //ISCATEGORY
+        fwrite($fh, "n");
+        fwrite($fh, "\t");
+        //Brand
+        fwrite($fh, self::getProductAttributeValue($product, $brandCode, $storeId));
+        fwrite($fh, "\t");
+        $productId = $product->getId();
+        if ($product->isConfigurable()) {
+            // this product is a parent for another product.  roll-up the GTINs
+            // UPCs rolled up
+            $upcs = array();
+            foreach ($childProducts as $child) {
+                self::pushValueIfNotNull($upcs, self::getProductAttributeValue($child, $upcCode, $storeId));
+            }
+            fwrite($fh, self::getGTINsCommaSeparated($upcs));
+            fwrite($fh, "\t");
+            // MPNs rolled up
+            $mpns = array();
+            foreach ($childProducts as $child) {
+                self::pushValueIfNotNull($mpns, self::getProductAttributeValue($child, $mpnCode, $storeId));
+            }
+            fwrite($fh, self::getGTINsCommaSeparated($mpns));
+            fwrite($fh, "\t");
+            // ISBNs rolled up
+            $isbns = array();
+            foreach ($childProducts as $child) {
+                self::pushValueIfNotNull($isbns, self::getProductAttributeValue($child, $isbnCode, $storeId));
+            }
+            fwrite($fh, self::getGTINsCommaSeparated($isbns));
+            fwrite($fh, "\t");
+            // EANs rolled up
+            $eans = array();
+            foreach ($childProducts as $child) {
+                self::pushValueIfNotNull($eans, self::getProductAttributeValue($child, $eanCode, $storeId));
+            }
+            fwrite($fh, self::getGTINsCommaSeparated($eans));
+            fwrite($fh, "\t");
+            // JANs rolled up
+            $jans = array();
+            foreach ($childProducts as $child) {
+                self::pushValueIfNotNull($jans, self::getProductAttributeValue($child, $janCode, $storeId));
+            }
+            fwrite($fh, self::getGTINsCommaSeparated($jans));
+            fwrite($fh, "\t");
+            // ASINs rolled up
+            $asins = array();
+            foreach ($childProducts as $child) {
+                self::pushValueIfNotNull($asins, self::getProductAttributeValue($child, $asinCode, $storeId));
+            }
+            fwrite($fh, self::getGTINsCommaSeparated($asins));
+        } else {
+            // this is a simple product just output the single GTINs
+            //UPC
+            fwrite($fh, self::getProductAttributeValue($product, $upcCode, $storeId));
+            fwrite($fh, "\t");
+            //MPN
+            fwrite($fh, self::getProductAttributeValue($product, $mpnCode, $storeId));
+            fwrite($fh, "\t");
+            //ISBN
+            fwrite($fh, self::getProductAttributeValue($product, $isbnCode, $storeId));
+            fwrite($fh, "\t");
+            //EAN
+            fwrite($fh, self::getProductAttributeValue($product, $eanCode, $storeId));
+            fwrite($fh, "\t");
+            //JAN
+            fwrite($fh, self::getProductAttributeValue($product, $janCode, $storeId));
+            fwrite($fh, "\t");
+            //ASIN
+            fwrite($fh, self::getProductAttributeValue($product, $asinCode, $storeId));
+        }
+
+        fwrite($fh, "\n");
+    }
+
+    private function pushValueIfNotNull(&$arr, $val) {
+        if ($val != null && $val != '') {
+            array_push($arr, $val);
+        }
+    }
+
     public function generateHistoricalOrdersFeed($startDate, $storeId, $fileName) {
         $path = Mage::getBaseDir('media') . DS . 'turnto/';
         if (!file_exists($path)) {
@@ -306,7 +626,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
 
         try {
             $fileName = 'magento_auto_histfeed.csv';
-            $storeId = Mage::getStoreConfig('turnto_admin/general/storeId');
+            $storeId = Mage::getStoreConfig('turnto_admin/historicalfeedconfig/storeId');
             $storeId = $storeId ? $storeId : 1;
             $this->generateHistoricalOrdersFeed("-2 days", $storeId, $fileName);
 
@@ -353,8 +673,73 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             curl_close($ch);
 
             Mage::log('Ended pushHistoricalOrdersFeed', null, $logFile);
+        } catch (Exception $e) {
+            Mage::log('Exception caught: ' . $e->getMessage(), null, $logFile);
+        }
+    }
 
-            echo $response;
+
+    public function pushCatalogFeed() {
+        $path = Mage::getBaseDir('media') . DS . 'turnto/';
+        if (!file_exists($path)) {
+            mkdir($path, 0755);
+        }
+
+        $logFile = 'turnto_catalog_feed_job.log';
+
+        Mage::log('Started pushCatalogFeed', null, $logFile);
+
+        try {
+            $fileName = 'magento_auto_catalog_feed.tsv';
+            $storeId = Mage::getStoreConfig('turnto_admin/catalogfeedconfig/storeId');
+            $storeId = $storeId ? $storeId : 1;
+            $websiteId = Mage::getStoreConfig('turnto_admin/catalogfeedconfig/websiteId');
+            $storeId = $storeId ? $websiteId : 1;
+            $this->generateCatalogFeed($websiteId, $storeId, $fileName);
+
+            $file = $path . $fileName;
+            $siteKey = Mage::getStoreConfig('turnto_admin/general/site_key');
+            $authKey = Mage::getStoreConfig('turnto_admin/general/site_auth');
+            $baseUrl = Mage::getStoreConfig('turnto_admin/general/url');
+            if (!$baseUrl) {
+                $baseUrl = "http://www.turnto.com";
+            }
+            $url = $baseUrl . "/feedUpload/postfile";
+            $feedStyle = "tab-style.1";
+
+            Mage::log('Filename: "' . $fileName . '"', null, $logFile);
+            Mage::log('Store Id: "' . $storeId . '"', null, $logFile);
+            Mage::log('siteKey: "' . $siteKey . '"', null, $logFile);
+            Mage::log('authKey: "' . $authKey . '"', null, $logFile);
+
+            if (!$siteKey || !$authKey) {
+                Mage::log('No siteKey or authKey found in configuration', null, $logFile);
+                return;
+            }
+
+            if (!file_exists($file)) {
+                Mage::log('Could not find the newly created catalog feed file. Are the write permission correct on /media/turnto?', null, $logFile);
+                return;
+            }
+
+            Mage::log("File size: " . filesize($file) . ' bytes', null, $logFile);
+
+            $fields = array('siteKey' => $siteKey, 'authKey' => $authKey, 'feedStyle' => $feedStyle, 'file' => "@$file");
+
+            Mage::log('Attempting to post file to ' . $url, null, $logFile);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+
+            $response = curl_exec($ch);
+            $errNo = curl_error($ch);
+            Mage::log('Response from server (error: ' . $errNo . '): ' . $response, null, $logFile);
+            curl_close($ch);
+
+            Mage::log('Ended pushCatalogFeed', null, $logFile);
         } catch (Exception $e) {
             Mage::log('Exception caught: ' . $e->getMessage(), null, $logFile);
         }
