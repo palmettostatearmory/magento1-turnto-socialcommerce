@@ -18,3 +18,4 @@ TurnTo Admin Extension<br>
 2.3.4 - Allow all types of attributes in the brand drop-down, not just varchar.<br>
 2.3.5 - Exclude Attribute Values from catalog feed if they are 'NULL'<br>
 2.3.6 - Historical orders field broken by virtual product orders.<br>
+2.3.7 - Better handling of configurable products in historical orders feed<br>
