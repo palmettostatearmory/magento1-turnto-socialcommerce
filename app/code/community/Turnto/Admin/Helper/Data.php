@@ -522,7 +522,17 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             foreach ($orders as $order) {
                 $itemlineid = 0;
                 foreach ($order->getAllVisibleItems() as $item) {
-                    $product = $item->getProduct();
+                    $parent = null;
+                    $parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')
+                        ->getParentIdsByChild($item->getProduct()->getId());
+                    if (isset($parentIds[0])) {
+                        $parent = Mage::getModel('catalog/product')->load($parentIds[0]);
+                    }
+                    if ($parent) {
+                        $product = $parent;
+                    } else {
+                        $product = $item->getProduct();
+                    }
                     //ORDERID
                     fwrite($handle, $order->getId());
                     fwrite($handle, "\t");
