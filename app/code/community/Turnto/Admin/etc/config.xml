@@ -3,7 +3,7 @@
 <config>
     <modules>
         <Turnto_Admin>
-            <version>2.3.7</version>
+            <version>2.3.8</version>
         </Turnto_Admin>
     </modules> 
 
@@ -53,13 +53,6 @@
 	
 	<frontend>
         <routers>
-            <turntocatfeed>
-                <use>standard</use>
-                <args>
-                    <module>Turnto_Admin</module>
-                    <frontName>turntocatalogfeed</frontName>
-                </args>
-            </turntocatfeed>
 	        <turntoversion>
                 <use>standard</use>
                 <args>
@@ -149,6 +142,11 @@
                 <asin_attribute nil="true"/>
                 <brand_attribute nil="true"/>
             </general>
+            <catalogfeedconfig>
+                <enabled>1</enabled>
+                <storeId>1</storeId>
+                <websiteId>1</websiteId>
+            </catalogfeedconfig>
         </turnto_admin>
     </default>   
     <crontab>
@@ -169,6 +167,14 @@
                     <model>turnto_admin/observer::pushHistoricalOrdersFeed</model>
                 </run>
             </turnto_historical_orders_feed>
+            <turnto_catalog_feed>
+                <schedule>
+                    <cron_expr>0 2 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>turnto_admin/observer::pushCatalogFeed</model>
+                </run>
+            </turnto_catalog_feed>
         </jobs>
     </crontab>
 </config>
