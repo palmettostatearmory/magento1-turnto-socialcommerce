@@ -188,25 +188,31 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
 
             $path = Mage::getBaseDir('media') . DS . 'turnto/';
             if (!file_exists($path)) {
+                Mage::log('Attempting to create turnto directory', null, $logFile);
                 mkdir($path, 0766);
             }
 
+            Mage::log('Opening catalog file for writing', null, $logFile);
             $fh = fopen($path . $fileName, 'w');
 
             if (!$fh) {
+                Mage::log('Failed to open catalog file' . $path . $fileName, null, $logFile);
                 Mage::throwException($this->__('Could not create historical feed file in directory ' . $path));
             }
 
+            Mage::log('Writing Header', null, $logFile);
             fwrite($fh, "SKU\tIMAGEURL\tTITLE\tPRICE\tCURRENCY\tACTIVE\tITEMURL\tCATEGORY\tKEYWORDS\tREPLACEMENTSKU\tINSTOCK\tVIRTUALPARENTCODE\tCATEGORYPATHJSON\tISCATEGORY\tBRAND\tUPC\tMPN\tISBN\tEAN\tJAN\tASIN");
             fwrite($fh, "\n");
 
-            $pageSize = 25;
+            Mage::log('Getting simple product count', null, $logFile);
+            $pageSize = 100;
             $count = Mage::getModel('catalog/product')
                 ->getCollection()
                 ->addStoreFilter($storeId)
                 ->addWebsiteFilter($websiteId)
                 ->addAttributeToFilter('type_id', array('eq' => 'simple'))
                 ->getSize();
+            Mage::log('Simple product count: ' . $count, null, $logFile);
 
             // other products
             $otherProductsCount = Mage::getModel('catalog/product')
@@ -215,6 +221,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                 ->addWebsiteFilter($websiteId)
                 ->addAttributeToFilter('type_id', array('neq' => 'simple'))
                 ->getSize();
+            Mage::log('Non-simple product count' . $otherProductsCount, null, $logFile);
 
             $page = 1;
             $pages = ceil($count / $pageSize);
@@ -226,7 +233,9 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             $asinCode = Mage::getStoreConfig('turnto_admin/general/asin_attribute');
             $brandCode = Mage::getStoreConfig('turnto_admin/general/brand_attribute');
 
+            Mage::log('Starting simple product output', null, $logFile);
             do {
+                Mage::log('Generating Page ' . $page, null, $logFile);
                 $collection = Mage::getModel('catalog/product')
                     ->getCollection()
                     ->addAttributeToSelect('*')
@@ -248,10 +257,14 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                 $collection->clear();
             } while ($page <= $pages);
 
+            Mage::log('Done with simple product output', null, $logFile);
+
             $page = 1;
             $pages = ceil($otherProductsCount / $pageSize);
 
+            Mage::log('Starting non-simple product output', null, $logFile);
             do {
+                Mage::log('Generating Page ' . $page, null, $logFile);
                 $collection = Mage::getModel('catalog/product')
                     ->getCollection()
                     ->addAttributeToSelect('*')
@@ -268,7 +281,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                 $collection->clear();
             } while ($page <= $pages);
 
-
+            Mage::log('Starting category output', null, $logFile);
             $categories = Mage::getModel('catalog/category')->setStoreId($storeId)->getCollection()->addAttributeToSelect('*');
             if ($categories) {
                 foreach ($categories as $category) {
@@ -322,6 +335,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                     fwrite($fh, "\n");
                 }
             }
+            Mage::log('Done', null, $logFile);
         } catch (Exception $e) {
             Mage::log($e->getMessage(), null, $logFile);
         }
@@ -345,7 +359,6 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                 $attributeText = Mage::getResourceModel('catalog/product')->getAttributeRawValue($product->getId(), $code, $storeId);
             }
 
-            Mage::log('$attributeText: ' .$attributeText, null, 'test_log.log');
             if ($attributeText != null || strcasecmp($attributeText, 'NULL') != 0) {
                 return $attributeText;
             }
@@ -695,7 +708,9 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             $storeId = $storeId ? $storeId : 1;
             $websiteId = Mage::getStoreConfig('turnto_admin/catalogfeedconfig/websiteId');
             $storeId = $storeId ? $websiteId : 1;
+            Mage::log('Generating catalog...', null, $logFile);
             $this->generateCatalogFeed($websiteId, $storeId, $fileName);
+            Mage::log('Done generating catalog', null, $logFile);
 
             $file = $path . $fileName;
             $siteKey = Mage::getStoreConfig('turnto_admin/general/site_key');
