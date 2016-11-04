@@ -751,7 +751,9 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
 
             $response = curl_exec($ch);
             $errNo = curl_error($ch);
+            $curlInfo = curl_getinfo($ch);
             Mage::log('Response from server (error: ' . $errNo . '): ' . $response, null, $logFile);
+            Mage::log('Additional response info: ' . print_r($curlInfo, true), null, $logFile);
             curl_close($ch);
 
             Mage::log('Ended pushCatalogFeed', null, $logFile);
