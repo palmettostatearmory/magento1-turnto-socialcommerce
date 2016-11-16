@@ -26,9 +26,6 @@
                 <catalog_product_view>
                     <file>turnto_client.xml</file>
                 </catalog_product_view>
-                <checkout_cart_index>
-                    <file>turnto_client.xml</file>
-                </checkout_cart_index>
             </updates>
         </layout>
 
