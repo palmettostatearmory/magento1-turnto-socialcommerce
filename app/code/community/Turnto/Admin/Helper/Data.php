@@ -336,6 +336,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                 }
             }
             Mage::log('Done', null, $logFile);
+            fclose($fh);
         } catch (Exception $e) {
             Mage::log($e->getMessage(), null, $logFile);
         }
@@ -638,7 +639,11 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         Mage::log('Started pushHistoricalOrdersFeed', null, $logFile);
 
         try {
-            $fileName = 'magento_auto_histfeed.csv';
+            // delete the old files
+            $path = Mage::getBaseDir('media') . DS . 'turnto/';
+            array_map('unlink', glob($path . '/magento_auto_histfeed-*.tsv'));
+
+            $fileName = 'magento_auto_histfeed-'.microtime(true).'.tsv';
             $storeId = Mage::getStoreConfig('turnto_admin/historicalfeedconfig/storeId');
             $storeId = $storeId ? $storeId : 1;
             $this->generateHistoricalOrdersFeed("-2 days", $storeId, $fileName);
@@ -703,7 +708,11 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         Mage::log('Started pushCatalogFeed', null, $logFile);
 
         try {
-            $fileName = 'magento_auto_catalog_feed.tsv';
+            // delete the old files
+            $path = Mage::getBaseDir('media') . DS . 'turnto/';
+            array_map('unlink', glob($path . '/magento_auto_catalog_feed-*.tsv'));
+
+            $fileName = 'magento_auto_catalog_feed-'.microtime(true).'.tsv';
             $storeId = Mage::getStoreConfig('turnto_admin/catalogfeedconfig/storeId');
             $storeId = $storeId ? $storeId : 1;
             $websiteId = Mage::getStoreConfig('turnto_admin/catalogfeedconfig/websiteId');
