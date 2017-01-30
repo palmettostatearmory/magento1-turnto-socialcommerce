@@ -679,6 +679,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
 
             Mage::log('Attempting to post file to ' . $url, null, $logFile);
             $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_VERBOSE, true);
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, 1);
@@ -752,6 +753,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
 
             Mage::log('Attempting to post file to ' . $url, null, $logFile);
             $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_VERBOSE, true);
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, 1);

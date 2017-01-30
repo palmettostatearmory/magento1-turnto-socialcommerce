@@ -95,5 +95,5 @@
     var TurnToItemSku = "<?php echo $TTSKU ?>";
 </script>
 
-<script type="text/javascript" src="<?php echo Mage::getStoreConfig('turnto_admin/general/static_url')?>/sitedata/<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>/v<?php echo $helper->getVersionForPath()?>/<?php echo $TTSKU?>/d/itemjs"></script>
+<script type="text/javascript" src="//<?php echo $helper->getStaticHostWithoutProtocol() ?>/sitedata/<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>/v<?php echo $helper->getVersionForPath()?>/<?php echo $TTSKU?>/d/itemjs"></script>
 
