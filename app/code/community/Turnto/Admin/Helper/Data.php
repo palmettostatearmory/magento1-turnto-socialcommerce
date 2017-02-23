@@ -675,16 +675,20 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
 
             Mage::log("File size: " . filesize($file) . ' bytes', null, $logFile);
 
-            $fields = array('siteKey' => $siteKey, 'authKey' => $authKey, 'feedStyle' => $feedStyle, 'file' => "@$file");
+            $curlFile = '@' . $file;
+            if (function_exists('curl_file_create')) {
+                // required for php 5.5+
+                $curlFile = curl_file_create($file);
+            }
+            $fields = array('siteKey' => $siteKey, 'authKey' => $authKey, 'feedStyle' => $feedStyle, 'file' => $curlFile);
 
             Mage::log('Attempting to post file to ' . $url, null, $logFile);
-            $ch = curl_init($url);
+            $ch = curl_init();
             curl_setopt($ch, CURLOPT_VERBOSE, true);
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-            curl_setopt($ch, CURLOPT_HEADER, 0);
 
             $response = curl_exec($ch);
             $errNo = curl_error($ch);
@@ -749,7 +753,12 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
 
             Mage::log("File size: " . filesize($file) . ' bytes', null, $logFile);
 
-            $fields = array('siteKey' => $siteKey, 'authKey' => $authKey, 'feedStyle' => $feedStyle, 'file' => "@$file");
+            $curlFile = '@' . $file;
+            if (function_exists('curl_file_create')) {
+                // required for php 5.5+
+                $curlFile = curl_file_create($file);
+            }
+            $fields = array('siteKey' => $siteKey, 'authKey' => $authKey, 'feedStyle' => $feedStyle, 'file' => $curlFile);
 
             Mage::log('Attempting to post file to ' . $url, null, $logFile);
             $ch = curl_init($url);
@@ -758,7 +767,6 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-            curl_setopt($ch, CURLOPT_HEADER, 0);
 
             $response = curl_exec($ch);
             $errNo = curl_error($ch);
