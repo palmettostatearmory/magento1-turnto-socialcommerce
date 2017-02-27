@@ -28,3 +28,4 @@ TurnTo Admin Extension<br>
 3.1.7 - Feeds were not always sending.
 3.1.8 - Proper handling for itemjs protocol.
 3.1.9 - Fixed teaser caching to work with full page caching
+3.1.10 - Fixed feed push for php version 5.5+.
