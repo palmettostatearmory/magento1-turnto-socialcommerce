@@ -7,6 +7,49 @@
 <?php echo Mage::getStoreConfig('turnto_admin/reviews/reviews_teaser_custom') ?>
 <?php endif; ?>
 
+<?php if (intval(Mage::getStoreConfig('turnto_admin/singleSignOn/enabled')) == 1): ?>
+<!-- SSO -->
+<style type="text/css">
+#TTpartnerRegWindow {width: 60%;height: 60%;}
+</style>
+<script type="text/javascript">
+    function localLogoutFunction(callbackFn) {
+        new Ajax.Request(
+            '/index.php/turntologin/index/logout',
+            {
+                method:'post',
+                onComplete:function (transport) {
+                    callbackFn(JSON.parse(transport.responseText));
+                },
+                parameters:""
+            }
+        );
+        callbackFn();
+    }
+    function localGetLoginStatusFunction(callbackFn) {
+        localGetUserInfoFunction(callbackFn);
+    }
+    function localGetUserInfoFunction(callbackFn) {
+        new Ajax.Request(
+            '/index.php/turntologin/index/getUserStatus',
+            {
+                method:'post',
+                onComplete:function (transport) {
+                    var jsonResponse = JSON.parse(transport.responseText);
+                    if (jsonResponse.error) {
+                        callbackFn({user_auth_token:null});
+                    }
+                    else {
+                        callbackFn(jsonResponse);
+                    }
+                },
+                parameters:""
+            }
+        );
+    }
+</script>
+<?php endif; ?>
+
 <script type="text/javascript">
     <?php
         $helper = Mage::helper('turnto_client_helper/data');
@@ -60,6 +103,14 @@
             minimumTextContentCharacterCount: <?php echo Mage::getStoreConfig('turnto_admin/vcgallery/minimumTextContentCharacterCount') ?>,
             minimumTextContentWordCount: <?php echo Mage::getStoreConfig('turnto_admin/vcgallery/minimumTextContentWordCount') ?>,
             sortOrder: "<?php echo Mage::getStoreConfig('turnto_admin/vcgallery/sortOrder') ?>",
+        }
+        <?php endif; ?>
+        <?php if (intval(Mage::getStoreConfig('turnto_admin/singleSignOn/enabled')) == 1): ?>
+        ,registration: {
+            localGetLoginStatusFunction:localGetLoginStatusFunction,
+            localRegistrationUrl:'/index.php/turntologin/index',
+            localGetUserInfoFunction:localGetUserInfoFunction,
+            localLogoutFunction:localLogoutFunction
         }
         <?php endif; ?>
     };

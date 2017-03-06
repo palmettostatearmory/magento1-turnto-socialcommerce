@@ -25,7 +25,8 @@ TurnTo Admin Extension<br>
 3.1.4 - Changed the on-going catalog feed from a pull to a nightly push. <br>
 3.1.5 - Minor tweak to the way the catalog feed generator is logged. <br>
 3.1.6 - Fixed duplicate JS includes on order confirmation page <br>
-3.1.7 - Feeds were not always sending.
-3.1.8 - Proper handling for itemjs protocol.
-3.1.9 - Fixed teaser caching to work with full page caching
-3.1.10 - Fixed feed push for php version 5.5+.
+3.1.7 - Feeds were not always sending. <br>
+3.1.8 - Proper handling for itemjs protocol.<br>
+3.1.9 - Fixed teaser caching to work with full page caching<br>
+3.1.10 - Fixed feed push for php version 5.5+.<br>
+3.1.11 - SSO fixed.

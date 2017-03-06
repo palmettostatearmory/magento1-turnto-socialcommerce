@@ -3,7 +3,7 @@
 <config>
     <modules>
         <Turnto_Admin>
-            <version>3.1.10</version>
+            <version>3.1.11</version>
         </Turnto_Admin>
     </modules> 
 
@@ -293,6 +293,9 @@
                 <hSpacing>8</hSpacing>
                 <vSpacing>8</vSpacing>
             </ccpinboard>
+            <singleSignOn>
+                <enabled>0</enabled>
+            </singleSignOn>
             <catalogfeedconfig>
                 <enabled>1</enabled>
                 <storeId>1</storeId>
