@@ -238,6 +238,17 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </checkoutcomments_enabled>
+                        <checkoutcomments_delivery_date_future>
+                            <label>Future Delivery Date (in days)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>The number of days in the future to use as the delivery date. Ensures that items are actually delivered before Review Solicitation Emails are sent.</comment>
+                            <depends><checkoutcomments_enabled>1</checkoutcomments_enabled></depends>
+                        </checkoutcomments_delivery_date_future>
                         <checkoutcomments_display_enabled>
                             <label>Enabled Checkout Comments Display Widget (on PDP)</label>
                             <frontend_type>select</frontend_type>

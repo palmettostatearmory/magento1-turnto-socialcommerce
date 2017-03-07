@@ -151,6 +151,7 @@
             </general>
             <checkoutcomments>
                 <checkoutcomments_enabled>1</checkoutcomments_enabled>
+                <checkoutcomments_delivery_date_future>30</checkoutcomments_delivery_date_future>
                 <checkoutcomments_display_enabled>0</checkoutcomments_display_enabled>
                 <cc_columns>auto</cc_columns>
                 <cc_rows_collapsed>1</cc_rows_collapsed>

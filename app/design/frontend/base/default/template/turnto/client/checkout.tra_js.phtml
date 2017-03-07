@@ -36,7 +36,7 @@ $TTpostalCode = $TTaddress->getPostcode();
 <script type="text/javascript">
     <?php
     echo 'var deliveryDate = new Date();';
-    echo 'deliveryDate.setDate(deliveryDate.getDate() + 30);';
+    echo 'deliveryDate.setDate(deliveryDate.getDate() + ' . Mage::getStoreConfig('turnto_admin/checkoutcomments/checkoutcomments_delivery_date_future') . ');';
     echo 'deliveryDate = deliveryDate.getFullYear().toString() + "-" +  (deliveryDate.getMonth() + 1).toString() + "-" + deliveryDate.getDate();';
     echo 'TurnToFeed.addFeedPurchaseOrder({orderId:"'.$TTorderId.'",email:"'.$TTemail.'",postalCode: "'.$TTpostalCode.'",firstName: "'.$TTfirstName.'", lastName: "'.$TTlastName.'", "deliveryDate": deliveryDate });';
 
