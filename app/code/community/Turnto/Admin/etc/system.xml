@@ -1109,22 +1109,6 @@
                             <show_in_store>1</show_in_store>
                             <comment>When set to Yes, Turnto historical orders feed will be pushed to TurnTo nightly.</comment>
                         </enabled>
-                        <storeId>
-                            <label>Store ID</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>20</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </storeId>
-                        <websiteId>
-                            <label>Website ID</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>30</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </websiteId>
                     </fields>
                 </historicalfeedconfig>
                 <catalogfeedconfig>
@@ -1147,22 +1131,6 @@
                             <show_in_store>1</show_in_store>
                             <comment>When set to Yes, a TurnTo catalog feed will be pushed to TurnTo nightly.</comment>
                         </enabled>
-                        <storeId>
-                            <label>Store ID</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>20</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </storeId>
-                        <websiteId>
-                            <label>Website ID</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>30</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </websiteId>
                     </fields>
                 </catalogfeedconfig>
             </groups>

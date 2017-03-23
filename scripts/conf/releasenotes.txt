@@ -31,3 +31,4 @@ TurnTo Admin Extension<br>
 3.1.10 - Fixed feed push for php version 5.5+.<br>
 3.1.11 - SSO fixed.<br>
 3.1.12 - Added SSO to mobile landing page.<br>
+3.1.13 - Support catalog feeds for multiple sites on one magento installation. <br>

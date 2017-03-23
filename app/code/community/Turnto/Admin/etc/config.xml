@@ -3,7 +3,7 @@
 <config>
     <modules>
         <Turnto_Admin>
-            <version>3.1.12</version>
+            <version>3.1.13</version>
         </Turnto_Admin>
     </modules> 
 
@@ -128,8 +128,7 @@
                 <url>http://static.www.turnto.com/static/export/</url>
             </feedconfig>
             <historicalfeedconfig>
-                <storeId>1</storeId>
-                <websiteId>1</websiteId>
+                <enabled>false</enabled>
             </historicalfeedconfig>
             <general>
                 <static_url>http://static.www.turnto.com</static_url>
@@ -299,8 +298,6 @@
             </singleSignOn>
             <catalogfeedconfig>
                 <enabled>1</enabled>
-                <storeId>1</storeId>
-                <websiteId>1</websiteId>
             </catalogfeedconfig>
         </turnto_admin>
     </default>   
@@ -324,7 +321,7 @@
             </turnto_historical_orders_feed>
             <turnto_catalog_feed>
                 <schedule>
-                    <cron_expr>0 2 * * *</cron_expr>
+                    <cron_expr>*/5 * * * *</cron_expr>
                 </schedule>
                 <run>
                     <model>turnto_admin/observer::pushCatalogFeed</model>

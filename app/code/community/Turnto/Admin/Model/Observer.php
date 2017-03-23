@@ -15,17 +15,26 @@ class Turnto_Admin_Model_Observer
 
     public function pushHistoricalOrdersFeed() {
         $helper = Mage::helper('adminhelper1');
-        if ($helper->isHistoricalOrderFeedPushEnabled()) {
-            // get historical orders for the past 2 years
-            $helper->pushHistoricalOrdersFeed();
+        $stores = $helper->enabledHistoricalOrderFeedPushStores();
+
+        if (sizeof($stores) > 0) {
+            foreach ($stores as $store) {
+                $helper->pushHistoricalOrdersFeed($store);
+            }
         }
     }
 
     public function pushCatalogFeed() {
-        $helper = Mage::helper('adminhelper1');
+        $logFile = 'turnto_catalog_feed_job.log';
+        Mage::log('Started catalog feed push job', null, $logFile);
 
-        if ($helper->isCatalogFeedPushEnabled()) {
-            $helper->pushCatalogFeed();
+        $helper = Mage::helper('adminhelper1');
+        $stores = $helper->enabledCatalogFeedPushStores();
+
+        if (sizeof($stores) > 0) {
+            foreach ($stores as $store) {
+                $helper->pushCatalogFeed($store);
+            }
         }
     }
 }

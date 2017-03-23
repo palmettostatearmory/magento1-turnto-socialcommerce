@@ -12,12 +12,39 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         return $this->checkFeed($feed_url);
     }
 
-    public function isHistoricalOrderFeedPushEnabled() {
-        return Mage::getStoreConfig('turnto_admin/historicalfeedconfig/enabled') == 1;
+    public function enabledHistoricalOrderFeedPushStores() {
+        $enabledStores = array();
+        foreach (Mage::app()->getWebsites() as $website) {
+            foreach ($website->getGroups() as $group) {
+                $stores = $group->getStores();
+                foreach ($stores as $store) {
+                    if (Mage::getStoreConfig('turnto_admin/historicalfeedconfig/enabled', $store) == 1) {
+                        $enabledStores[] = $store;
+                    }
+                }
+            }
+        }
+        return $enabledStores;
     }
 
-    public function isCatalogFeedPushEnabled() {
-        return Mage::getStoreConfig('turnto_admin/catalogfeedconfig/enabled') == 1;
+    /**
+     * A list of the stores that have the catalog push turned on
+     *
+     * @return array
+     */
+    public function enabledCatalogFeedPushStores() {
+        $enabledStores = array();
+        foreach (Mage::app()->getWebsites() as $website) {
+            foreach ($website->getGroups() as $group) {
+                $stores = $group->getStores();
+                foreach ($stores as $store) {
+                    if (Mage::getStoreConfig('turnto_admin/catalogfeedconfig/enabled', $store) == 1) {
+                        $enabledStores[] = $store;
+                    }
+                }
+            }
+        }
+        return $enabledStores;
     }
 
     public function checkFeed($url = null)
@@ -369,6 +396,8 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
     }
 
     private function outputProduct($fh, $product, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode, $brandCode) {
+        $product->setStoreId($storeId);
+
         //SKU
         fwrite($fh, $product->getSku());
         fwrite($fh, "\t");
@@ -628,7 +657,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         return null;
     }
 
-    public function pushHistoricalOrdersFeed() {
+    public function pushHistoricalOrdersFeed($store) {
         $path = Mage::getBaseDir('media') . DS . 'turnto/';
         if (!file_exists($path)) {
             mkdir($path, 0755);
@@ -643,15 +672,14 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             $path = Mage::getBaseDir('media') . DS . 'turnto/';
             array_map('unlink', glob($path . '/magento_auto_histfeed-*.tsv'));
 
-            $fileName = 'magento_auto_histfeed-'.microtime(true).'.tsv';
-            $storeId = Mage::getStoreConfig('turnto_admin/historicalfeedconfig/storeId');
-            $storeId = $storeId ? $storeId : 1;
+            $fileName = 'magento_auto_histfeed-'.microtime(true).'-'.$store->getId().'.tsv';
+            $storeId = $store ? $store->getId() : 1;
             $this->generateHistoricalOrdersFeed("-2 days", $storeId, $fileName);
 
             $file = $path . $fileName;
-            $siteKey = Mage::getStoreConfig('turnto_admin/general/site_key');
-            $authKey = Mage::getStoreConfig('turnto_admin/general/site_auth');
-            $baseUrl = Mage::getStoreConfig('turnto_admin/general/url');
+            $siteKey = Mage::getStoreConfig('turnto_admin/general/site_key', $store);
+            $authKey = Mage::getStoreConfig('turnto_admin/general/site_auth', $store);
+            $baseUrl = Mage::getStoreConfig('turnto_admin/general/url', $store);
             if (!$baseUrl) {
                 $baseUrl = "http://www.turnto.com";
             }
@@ -702,7 +730,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
     }
 
 
-    public function pushCatalogFeed() {
+    public function pushCatalogFeed($store) {
         $path = Mage::getBaseDir('media') . DS . 'turnto/';
         if (!file_exists($path)) {
             mkdir($path, 0755);
@@ -710,26 +738,24 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
 
         $logFile = 'turnto_catalog_feed_job.log';
 
-        Mage::log('Started pushCatalogFeed', null, $logFile);
+        Mage::log('Started pushCatalogFeed for store ' . $store->getId(), null, $logFile);
 
         try {
             // delete the old files
             $path = Mage::getBaseDir('media') . DS . 'turnto/';
-            array_map('unlink', glob($path . '/magento_auto_catalog_feed-*.tsv'));
+            array_map('unlink', glob($path . '/magento_auto_catalog_feed-*'.$store->getId().'.tsv'));
 
-            $fileName = 'magento_auto_catalog_feed-'.microtime(true).'.tsv';
-            $storeId = Mage::getStoreConfig('turnto_admin/catalogfeedconfig/storeId');
-            $storeId = $storeId ? $storeId : 1;
-            $websiteId = Mage::getStoreConfig('turnto_admin/catalogfeedconfig/websiteId');
-            $storeId = $storeId ? $websiteId : 1;
+            $fileName = 'magento_auto_catalog_feed-'.microtime(true).'-'.$store->getId().'.tsv';
+            $storeId = $store ? $store->getId() : 1;
+            $websiteId = $store ? $store->getWebsiteId() : 1;
             Mage::log('Generating catalog...', null, $logFile);
             $this->generateCatalogFeed($websiteId, $storeId, $fileName);
             Mage::log('Done generating catalog', null, $logFile);
 
             $file = $path . $fileName;
-            $siteKey = Mage::getStoreConfig('turnto_admin/general/site_key');
-            $authKey = Mage::getStoreConfig('turnto_admin/general/site_auth');
-            $baseUrl = Mage::getStoreConfig('turnto_admin/general/url');
+            $siteKey = Mage::getStoreConfig('turnto_admin/general/site_key', $store);
+            $authKey = Mage::getStoreConfig('turnto_admin/general/site_auth', $store);
+            $baseUrl = Mage::getStoreConfig('turnto_admin/general/url', $store);
             if (!$baseUrl) {
                 $baseUrl = "http://www.turnto.com";
             }
