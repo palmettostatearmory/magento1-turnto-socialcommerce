@@ -321,7 +321,7 @@
             </turnto_historical_orders_feed>
             <turnto_catalog_feed>
                 <schedule>
-                    <cron_expr>*/5 * * * *</cron_expr>
+                    <cron_expr>0 2 * * *</cron_expr>
                 </schedule>
                 <run>
                     <model>turnto_admin/observer::pushCatalogFeed</model>
