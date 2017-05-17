@@ -7,25 +7,29 @@ class Turnto_Client_Block_Reviewscontent extends Mage_Core_Block_Template
     const TURNTO_STATIC_EMBED = 'staticEmbed';
     const TURNTO_DYNAMIC_EMBED = 'dynamicEmbed';
 
-    public function __construct()
+    public function getCacheKey()
     {
         $helper = Mage::helper('turnto_client_helper/data');
-        //parent::construct();
-        $this->addData(array(
-            // defaults to 15 minutes
-            'cache_lifetime' => Mage::getStoreConfig('turnto_admin/general/static_cache_time') ? intval(Mage::getStoreConfig('turnto_admin/general/static_cache_time')) : 900,
-            'cache_tags' => array(
-                $this::TURNTO_REVIEWS_STATIC_CACHE_TAG,
-                Mage_Catalog_Model_Product::CACHE_TAG,
-                Mage::app()->getStore()->getId(),
-                (int)Mage::app()->getStore()->isCurrentlySecure(),
-                Mage::getDesign()->getPackageName(),
-                Mage::getDesign()->getTheme('template'),
-                Mage::getStoreConfig('turnto_admin/reviews/reviews_setup_type')
-            ),
-            'cache_key' => $this::TURNTO_REVIEW_STATIC_CACHE_KEY . $helper->getProduct()->getId()
-        ));
+        return $this::TURNTO_REVIEW_STATIC_CACHE_KEY . $helper->getProduct()->getId();
     }
+
+    public function getCacheLifetime()
+    {
+        return Mage::getStoreConfig('turnto_admin/general/static_cache_time') ? intval(Mage::getStoreConfig('turnto_admin/general/static_cache_time')) : 900;
+    }
+
+    public function getCacheTags()
+    {
+        return array(
+            $this::TURNTO_REVIEWS_STATIC_CACHE_TAG,
+            Mage_Catalog_Model_Product::CACHE_TAG,
+            Mage::app()->getStore()->getId(),
+            (int)Mage::app()->getStore()->isCurrentlySecure(),
+            Mage::getDesign()->getPackageName(),
+            Mage::getDesign()->getTheme('template'),
+            Mage::getStoreConfig('turnto_admin/reviews/reviews_setup_type')
+        );
+    } 
 
     public function getReviewsHtml()
     {
