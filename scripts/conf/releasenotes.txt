@@ -34,3 +34,4 @@ TurnTo Admin Extension<br>
 3.1.13 - Support catalog feeds for multiple sites on one magento installation. <br>
 3.1.14 - Change to catalog feed cronjob execution time. <br>
 3.1.15 - Better support for EE FPC. <br>
+3.1.16 - Fixed mixed content errors on mobile landing page. <br>
