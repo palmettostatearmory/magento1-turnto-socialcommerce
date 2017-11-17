@@ -134,7 +134,7 @@
     <?php endif; ?>
 
     <?php if (intval(Mage::getStoreConfig('turnto_admin/vcgallery/vc_gallery_enabled')) == 1): ?>
-        var TurnToGallerySkus = ['<?php echo $TTSKU ?>'];
+        var TurnToGallerySkus = <?php echo $helper->getSkuAndVariantSkusAsJSArray(); ?>;
 
         (function() {
             var tt = document.createElement('script'); tt.type = 'text/javascript'; tt.async=true;
@@ -148,3 +148,72 @@
 
 <script type="text/javascript" src="//<?php echo $helper->getStaticHostWithoutProtocol() ?>/sitedata/<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>/v<?php echo $helper->getVersionForPath()?>/<?php echo $TTSKU?>/d/itemjs"></script>
 
+<?php if (intval(Mage::getStoreConfig('turnto_admin/general/use_child_sku')) == 1): ?>
+    <script type="text/javascript">
+        <?php
+        $product = $helper->getProduct();
+        if ($product->isConfigurable()) {
+            $childProducts = Mage::getModel('catalog/product_type_configurable')
+                ->getUsedProducts(null,$product);
+            $idToSku = [];
+            foreach ($childProducts as $child) {
+                $idToSku[$child->getId()] = $child->getSku();
+            }
+        }
+
+        $mappingJs = implode(', ', array_map(
+            function ($v, $k) { return sprintf("%s:'%s'", $k, $v); },
+            $idToSku,
+            array_keys($idToSku)
+        ));
+
+        echo 'var ttIdToSku = {' . $mappingJs . '};'
+        ?>
+
+        function getIdOfSelectedProduct(cb) {
+            var existingProducts = new Object();
+
+            for (var i = this.settings.length - 1; i >= 0; i--) {
+                var selected = this.settings[i].options[this.settings[i].selectedIndex];
+                if (selected.config) {
+                    for (var iproducts = 0; iproducts < selected.config.products.length; iproducts++) {
+                        var usedAsKey = selected.config.products[iproducts] + "";
+                        if (existingProducts[usedAsKey] == undefined) {
+                            existingProducts[usedAsKey] = 1;
+                        }
+                        else {
+                            existingProducts[usedAsKey] = existingProducts[usedAsKey] + 1;
+                        }
+                    }
+                }
+            }
+
+            for (var keyValue in existingProducts) {
+                for (var keyValueInner in existingProducts) {
+                    if (Number(existingProducts[keyValueInner]) < Number(existingProducts[keyValue])) {
+                        delete existingProducts[keyValueInner];
+                    }
+                }
+            }
+
+            var sizeOfExistingProducts = 0;
+            var currentSimpleProductId = "";
+            for (var keyValue in existingProducts) {
+                currentSimpleProductId = keyValue;
+                sizeOfExistingProducts = sizeOfExistingProducts + 1
+            }
+
+            if (sizeOfExistingProducts == 1) {
+                cb(currentSimpleProductId)
+            }
+        };
+
+
+        Product.OptionsPrice.prototype.reload = Product.OptionsPrice.prototype.reload.wrap(function(parentMethod){
+            parentMethod();
+            getIdOfSelectedProduct.call(spConfig, function (id) {
+                TurnTo.reset({"sku": ttIdToSku[id]})
+            });
+        });
+    </script>
+<?php endif; ?>

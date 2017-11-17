@@ -21,22 +21,52 @@ class Turnto_Client_Helper_Data extends Mage_Core_Helper_Data
         return $url;
     }
 
-    function getSku($product)
+    function getSku($product = null)
     {
         if (!$product) {
             $product = $this->getProduct();
         }
         $sku = null;
         $parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
-        if (isset($parentIds[0])) {
+        if (isset($parentIds[0]) && intval(Mage::getStoreConfig('turnto_admin/general/use_child_sku')) != 1) {
             $parent = Mage::getModel('catalog/product')->load($parentIds[0]);
             $sku = $this->escapeHtml($parent->getSku());
+        } else if (intval(Mage::getStoreConfig('turnto_admin/general/use_child_sku')) == 1 && $product->isConfigurable()) {
+            // get a random child of the configurable product
+            $childProducts = Mage::getModel('catalog/product_type_configurable')
+                ->getUsedProducts(null,$product);
+            $sku = $childProducts[0]->getSku();
         } else {
             $product = Mage::getModel('catalog/product')->load($product->getId());
             $sku = $this->escapeHtml($product->getSku());
         }
 
         return $sku;
+    }
+
+    function getSkuAndVariantSkusAsJSArray($product = null) {
+        if (!$product) {
+            $product = $this->getProduct();
+        }
+
+        $parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
+        if (isset($parentIds[0])) {
+            $parent = Mage::getModel('catalog/product')->load($parentIds[0]);
+            $product = $parent;
+        }
+
+        $skuList = [$product->getSku()];
+
+        if (intval(Mage::getStoreConfig('turnto_admin/general/use_child_sku')) == 1 && $product->isConfigurable()) {
+            $childProducts = Mage::getModel('catalog/product_type_configurable')
+                ->getUsedProducts(null, $product);
+
+            foreach ($childProducts as $child) {
+                array_push($skuList, $child->getSku());
+            }
+        }
+
+        return '["' . join('","', $skuList) . '"]';
     }
 
     function loadFile($url)

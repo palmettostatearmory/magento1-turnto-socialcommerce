@@ -274,10 +274,10 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
 
                 foreach ($collection as $product) {
                     $parents = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
-                    if (isset($parents[0])) {
+                    if (isset($parents[0]) && intval(Mage::getStoreConfig('turnto_admin/general/use_child_sku')) != 1) {
                         // skip
                     } else {
-                        self::outputProduct($fh, $product, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode, $brandCode);
+                        self::outputProduct($fh, $product, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode, $brandCode, $parents[0]);
                     }
                 }
                 $page++;
@@ -395,7 +395,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         return '';
     }
 
-    private function outputProduct($fh, $product, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode, $brandCode) {
+    private function outputProduct($fh, $product, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode, $brandCode, $parentId = null) {
         $product->setStoreId($storeId);
 
         //SKU
@@ -447,9 +447,12 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         fwrite($fh, "\t");
         // REPLACEMENTSKU
         fwrite($fh, "\t");
-        //VIRTUALPARENTCODE
-        fwrite($fh, "\t");
         //INSTOCK
+        fwrite($fh, "\t");
+        //VIRTUALPARENTCODE
+        if (isset($parentId) && intval(Mage::getStoreConfig('turnto_admin/general/use_child_sku')) == 1) {
+            fwrite($fh, Mage::getModel('catalog/product')->load($parentId)->getSku());
+        }
         fwrite($fh, "\t");
         //CATEGORYPATHJSON
         fwrite($fh, "\t");
@@ -564,17 +567,26 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             $orders->load();
             foreach ($orders as $order) {
                 $itemlineid = 0;
-                foreach ($order->getAllVisibleItems() as $item) {
+                foreach ($order->getAllItems() as $item) {
                     $parent = null;
                     $parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')
                         ->getParentIdsByChild($item->getProduct()->getId());
                     if (isset($parentIds[0])) {
                         $parent = Mage::getModel('catalog/product')->load($parentIds[0]);
                     }
-                    if ($parent) {
+                    if ($parent && intval(Mage::getStoreConfig('turnto_admin/general/use_child_sku')) != 1) {
                         $product = $parent;
                     } else {
                         $product = $item->getProduct();
+                    }
+                    if ($product->isConfigurable() && intval(Mage::getStoreConfig('turnto_admin/general/use_child_sku')) == 1) {
+                        // skip configurable parents
+                        continue;
+                    }
+                    $shipDate = $this->getDateOfShipmentContainingItem($order, $item);
+                    if ($shipDate == null && intval(Mage::getStoreConfig('turnto_admin/historicalfeedconfig/only_shipped')) == 1) {
+                        // skip items that haven't shipped
+                        continue;
                     }
                     //ORDERID
                     fwrite($handle, $order->getId());
@@ -626,7 +638,6 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                     fwrite($handle, "\t");
 
                     //DELIVERYDATE
-                    $shipDate = $this->getDateOfShipmentContainingItem($order, $item);
                     if ($shipDate != null) {
                         fwrite($handle, $shipDate->toString('Y-MM-d'));
                     }
@@ -648,7 +659,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             $items = $shipment->getItemsCollection();
             foreach ($items as $it) {
                 // check if this shipment contains the item that was passed in
-                if ($item->getId() == $it->getOrderItemId()) {
+                if ($item->getSku() == $it->getSku()) {
                     return $shipment->getCreatedAtDate();
                 }
             }

@@ -35,3 +35,4 @@ TurnTo Admin Extension<br>
 3.1.14 - Change to catalog feed cronjob execution time. <br>
 3.1.15 - Better support for EE FPC. <br>
 3.1.16 - Fixed mixed content errors on mobile landing page. <br>
+3.1.17 - Added ability to include variants in the catalog feed.  Configurable parent is used as VIRTUAL_PARENT_CODE. <br>

@@ -43,9 +43,12 @@ $TTpostalCode = $TTaddress->getPostcode();
     foreach ($TTorder->getAllItems() as $item) {
        $TTproduct = Mage::getModel('catalog/product')->load($item->getProductId());
        $TTparents = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($TTproduct->getId());
-       if(isset($TTparents[0]))
-       {
+       if(isset($TTparents[0]) && intval(Mage::getStoreConfig('turnto_admin/general/use_child_sku')) != 1) {
            // skip products with a parent, they are in the feed separately
+           continue;
+       }
+       if ($TTproduct->isConfigurable() && intval(Mage::getStoreConfig('turnto_admin/general/use_child_sku')) == 1) {
+           // skip parent products if "Use Child SKU is enabled"
            continue;
        }
        $TTurl= Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . 'index.php/' . $TTproduct->getUrlPath();
@@ -55,6 +58,7 @@ $TTpostalCode = $TTaddress->getPostcode();
 
 
     ?>
+    TurnToFeed.debugFeed();
     TurnToFeed.sendFeed();
 </script>
 <?php endif; ?>

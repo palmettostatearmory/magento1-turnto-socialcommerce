@@ -3,7 +3,7 @@
 <config>
     <modules>
         <Turnto_Admin>
-            <version>3.1.16</version>
+            <version>3.1.17</version>
         </Turnto_Admin>
     </modules> 
 
@@ -139,6 +139,7 @@
                 <cc_display_cache_time>900</cc_display_cache_time>
                 <vcgallery_cache_time>900</vcgallery_cache_time>
                 <version>4.3</version>
+                <use_child_sku>0</use_child_sku>
                 <skip_css_load>0</skip_css_load>
                 <upc_attribute nil="true"/>
                 <mpn_attribute nil="true"/>
@@ -147,6 +148,7 @@
                 <jan_attribute nil="true"/>
                 <asin_attribute nil="true"/>
                 <brand_attribute nil="true"/>
+
             </general>
             <checkoutcomments>
                 <checkoutcomments_enabled>1</checkoutcomments_enabled>
@@ -296,6 +298,9 @@
             <singleSignOn>
                 <enabled>0</enabled>
             </singleSignOn>
+            <historicalfeedconfig>
+                <only_shipped>0</only_shipped>
+            </historicalfeedconfig>
             <catalogfeedconfig>
                 <enabled>1</enabled>
             </catalogfeedconfig>
