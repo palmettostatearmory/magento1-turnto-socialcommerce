@@ -24,6 +24,7 @@ Before installing the Magento extension, follow these steps:
 2. Run these commands: `modman init` and `modman clone git@github.com:turnto/Magento1_TurnTo_SocialCommerce.git`
 3. Login back to Magento admin panel
 4. Go to System->Configuration->Developer->Template Settings and change "Allow Symlinks" to "Yes"
+    1. NOTE: This setting was removed from the admin in newer versions of Magento. If you don't see it, follow the SQL [instructions here](https://magento.stackexchange.com/a/184185).
 5. Go to Turnto->Integration menu to configure the module
 6. Flush Cache and/or Compilation, if desired.
 
@@ -31,13 +32,13 @@ Before installing the Magento extension, follow these steps:
 <ul style="list-style:none">
   <li>1. Make sure all config.xml files have been updated to the correct version</li>
   <li>2. Commit changes for release and push to github</li>
-  <li>3. Packaged extension will be in &lt;PROJECT_DIRECTORY&lt;/build<li>
+  <li>3. Packaged extension will be in &lt;PROJECT_DIRECTORY&lt;/build</li>
 </ul>
 <h1>Building Extension and Creating a release</h1>
 <ul style="list-style:none">
   <li>1. Commit changes for release</li>
   <li>2. Make sure all config.xml files have been updated to the correct version</li>
   <li>3. Run buildMangetoExtension.sh &lt;TAG_NAME&gt;</li>
-  <li>4. Packaged extension will be created in &lt;PROJECT_DIRECTORY&gt;/build<li>
+  <li>4. Packaged extension will be created in &lt;PROJECT_DIRECTORY&gt;/build</li>
 </ul>
 
