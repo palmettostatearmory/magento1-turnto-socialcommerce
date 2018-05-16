@@ -12,7 +12,8 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         return $this->checkFeed($feed_url);
     }
 
-    public function enabledHistoricalOrderFeedPushStores() {
+    public function enabledHistoricalOrderFeedPushStores()
+    {
         $enabledStores = array();
         foreach (Mage::app()->getWebsites() as $website) {
             foreach ($website->getGroups() as $group) {
@@ -32,7 +33,8 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
      *
      * @return array
      */
-    public function enabledCatalogFeedPushStores() {
+    public function enabledCatalogFeedPushStores()
+    {
         $enabledStores = array();
         foreach (Mage::app()->getWebsites() as $website) {
             foreach ($website->getGroups() as $group) {
@@ -201,7 +203,8 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         return $updated;
     }
 
-    public function generateCatalogFeed($websiteId, $storeId, $fileName) {
+    public function generateCatalogFeed($websiteId, $storeId, $fileName)
+    {
         try {
             $logFile = 'turnto_catalog_feed_job.log';
 
@@ -313,7 +316,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             if ($categories) {
                 foreach ($categories as $category) {
                     $category->setStoreId($storeId);
-                    fwrite($fh, 'mag_category_'.$category->getId());
+                    fwrite($fh, 'mag_category_' . $category->getId());
                     fwrite($fh, "\t");
                     //IMAGEURL
                     fwrite($fh, "\t");
@@ -331,7 +334,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                     fwrite($fh, $category->getUrl());
                     fwrite($fh, "\t");
                     //CATEGORY
-                    fwrite($fh, $category->getParentCategory()->getId() ? 'mag_category_'.$category->getParentCategory()->getId() : '');
+                    fwrite($fh, $category->getParentCategory()->getId() ? 'mag_category_' . $category->getParentCategory()->getId() : '');
                     fwrite($fh, "\t");
                     //KEYWORDS
                     fwrite($fh, "\t");
@@ -371,11 +374,13 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         return;
     }
 
-    private function getGTINsCommaSeparated($gtins) {
+    private function getGTINsCommaSeparated($gtins)
+    {
         return join(',', $gtins);
     }
 
-    private function getProductAttributeValue($product, $code, $storeId) {
+    private function getProductAttributeValue($product, $code, $storeId)
+    {
         if ($code != null && $code != '') {
             $attributeText = $product->getAttributeText($code);
 
@@ -548,13 +553,15 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         fwrite($catalogFeedFile, "\n");
     }
 
-    private function pushValueIfNotNull(&$arr, $val) {
+    private function pushValueIfNotNull(&$arr, $val)
+    {
         if ($val != null && $val != '') {
             array_push($arr, $val);
         }
     }
 
-    public function generateHistoricalOrdersFeed($startDate, $storeId, $fileName) {
+    public function generateHistoricalOrdersFeed($startDate, $storeId, $fileName)
+    {
         $path = Mage::getBaseDir('media') . DS . 'turnto/';
         if (!file_exists($path)) {
             mkdir($path, 0766);
@@ -574,7 +581,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         $orders = Mage::getModel('sales/order')
             ->getCollection()
             ->addFieldToFilter('store_id', $storeId)
-            ->addAttributeToFilter('created_at', array('from'=>$fromDate))
+            ->addAttributeToFilter('created_at', array('from' => $fromDate))
             ->addAttributeToSort('entity_id', 'ASC')
             ->setPageSize(100);
 
@@ -626,7 +633,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                     fwrite($handle, "\t");
                     //ZIP
                     $shippingAddress = $order->getShippingAddress();
-                    if ($shippingAddress){
+                    if ($shippingAddress) {
                         fwrite($handle, $shippingAddress->getPostcode());
                     }
                     fwrite($handle, "\t");
@@ -669,7 +676,8 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         fclose($handle);
     }
 
-    private function getDateOfShipmentContainingItem($order, $item) {
+    private function getDateOfShipmentContainingItem($order, $item)
+    {
         // get the shipments for this order
         $shipments = $order->getShipmentsCollection();
         foreach ($shipments as $shipment) {
@@ -686,7 +694,8 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         return null;
     }
 
-    public function pushHistoricalOrdersFeed($store) {
+    public function pushHistoricalOrdersFeed($store)
+    {
         $path = Mage::getBaseDir('media') . DS . 'turnto/';
         if (!file_exists($path)) {
             mkdir($path, 0755);
@@ -701,7 +710,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             $path = Mage::getBaseDir('media') . DS . 'turnto/';
             array_map('unlink', glob($path . '/magento_auto_histfeed-*.tsv'));
 
-            $fileName = 'magento_auto_histfeed-'.microtime(true).'-'.$store->getId().'.tsv';
+            $fileName = 'magento_auto_histfeed-' . microtime(true) . '-' . $store->getId() . '.tsv';
             $storeId = $store ? $store->getId() : 1;
             $this->generateHistoricalOrdersFeed("-2 days", $storeId, $fileName);
 
@@ -759,7 +768,8 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
     }
 
 
-    public function pushCatalogFeed($store) {
+    public function pushCatalogFeed($store)
+    {
         $path = Mage::getBaseDir('media') . DS . 'turnto/';
         if (!file_exists($path)) {
             mkdir($path, 0755);
@@ -772,9 +782,9 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         try {
             // delete the old files
             $path = Mage::getBaseDir('media') . DS . 'turnto/';
-            array_map('unlink', glob($path . '/magento_auto_catalog_feed-*'.$store->getId().'.tsv'));
+            array_map('unlink', glob($path . '/magento_auto_catalog_feed-*' . $store->getId() . '.tsv'));
 
-            $fileName = 'magento_auto_catalog_feed-'.microtime(true).'-'.$store->getId().'.tsv';
+            $fileName = 'magento_auto_catalog_feed-' . microtime(true) . '-' . $store->getId() . '.tsv';
             $storeId = $store ? $store->getId() : 1;
             $websiteId = $store ? $store->getWebsiteId() : 1;
             Mage::log('Generating catalog...', null, $logFile);
