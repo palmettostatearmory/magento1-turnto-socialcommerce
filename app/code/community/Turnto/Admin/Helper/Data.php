@@ -395,12 +395,30 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         return '';
     }
 
-    private function outputProduct($fh, $product, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode, $brandCode, $parentId = null) {
+    /**
+     * Writes product data to feed file
+     *
+     * @param resource                   $catalogFeedFile
+     * @param Mage_Catalog_Model_Product $product
+     * @param string                     $storeId
+     * @param string                     $upcCode
+     * @param string                     $mpnCode
+     * @param string                     $isbnCode
+     * @param string                     $eanCode
+     * @param string                     $janCode
+     * @param string                     $asinCode
+     * @param string                     $brandCode
+     * @param string|null                $parentId
+     *
+     * @throws Varien_Exception
+     */
+    private function outputProduct($catalogFeedFile, $product, $storeId, $upcCode, $mpnCode, $isbnCode, $eanCode, $janCode, $asinCode, $brandCode, $parentId = null)
+    {
         $product->setStoreId($storeId);
 
         //SKU
-        fwrite($fh, $product->getSku());
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, $product->getSku());
+        fwrite($catalogFeedFile, "\t");
 
         $childProducts = null;
         if ($product->isConfigurable()) {
@@ -419,49 +437,49 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             $imageUrl = Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getThumbnail());
         }
         if (!$imageUrl) {
-            fwrite($fh, $product->getImageUrl());
+            fwrite($catalogFeedFile, $product->getImageUrl());
         } else {
-            fwrite($fh, $imageUrl);
+            fwrite($catalogFeedFile, $imageUrl);
         }
 
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, "\t");
         //TITLE
-        fwrite($fh, $product->getName());
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, $product->getName());
+        fwrite($catalogFeedFile, "\t");
         //PRICE
-        fwrite($fh, $product->getPrice());
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, $product->getPrice());
+        fwrite($catalogFeedFile, "\t");
         //CURRENCY
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, "\t");
         //ACTIVE
-        fwrite($fh, 'Y');
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, intval($product->getStatus()) === \Mage_Catalog_Model_Product_Status::STATUS_ENABLED ? 'Y' : 'N');
+        fwrite($catalogFeedFile, "\t");
         //ITEMURL
-        fwrite($fh, $product->getProductUrl());
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, $product->getProductUrl());
+        fwrite($catalogFeedFile, "\t");
         //CATEGORY
         $ids = $product->getCategoryIds();
-        fwrite($fh,(isset($ids[0]) ? 'mag_category_'.$ids[0] : ''));
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, (isset($ids[0]) ? 'mag_category_' . $ids[0] : ''));
+        fwrite($catalogFeedFile, "\t");
         // KEYWORDS
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, "\t");
         // REPLACEMENTSKU
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, "\t");
         //INSTOCK
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, "\t");
         //VIRTUALPARENTCODE
         if (isset($parentId) && intval(Mage::getStoreConfig('turnto_admin/general/use_child_sku')) == 1) {
-            fwrite($fh, Mage::getModel('catalog/product')->load($parentId)->getSku());
+            fwrite($catalogFeedFile, Mage::getModel('catalog/product')->load($parentId)->getSku());
         }
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, "\t");
         //CATEGORYPATHJSON
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, "\t");
         //ISCATEGORY
-        fwrite($fh, "n");
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, "n");
+        fwrite($catalogFeedFile, "\t");
         //Brand
-        fwrite($fh, self::getProductAttributeValue($product, $brandCode, $storeId));
-        fwrite($fh, "\t");
+        fwrite($catalogFeedFile, self::getProductAttributeValue($product, $brandCode, $storeId));
+        fwrite($catalogFeedFile, "\t");
         $productId = $product->getId();
         if ($product->isConfigurable()) {
             // this product is a parent for another product.  roll-up the GTINs
@@ -470,64 +488,64 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             foreach ($childProducts as $child) {
                 self::pushValueIfNotNull($upcs, self::getProductAttributeValue($child, $upcCode, $storeId));
             }
-            fwrite($fh, self::getGTINsCommaSeparated($upcs));
-            fwrite($fh, "\t");
+            fwrite($catalogFeedFile, self::getGTINsCommaSeparated($upcs));
+            fwrite($catalogFeedFile, "\t");
             // MPNs rolled up
             $mpns = array();
             foreach ($childProducts as $child) {
                 self::pushValueIfNotNull($mpns, self::getProductAttributeValue($child, $mpnCode, $storeId));
             }
-            fwrite($fh, self::getGTINsCommaSeparated($mpns));
-            fwrite($fh, "\t");
+            fwrite($catalogFeedFile, self::getGTINsCommaSeparated($mpns));
+            fwrite($catalogFeedFile, "\t");
             // ISBNs rolled up
             $isbns = array();
             foreach ($childProducts as $child) {
                 self::pushValueIfNotNull($isbns, self::getProductAttributeValue($child, $isbnCode, $storeId));
             }
-            fwrite($fh, self::getGTINsCommaSeparated($isbns));
-            fwrite($fh, "\t");
+            fwrite($catalogFeedFile, self::getGTINsCommaSeparated($isbns));
+            fwrite($catalogFeedFile, "\t");
             // EANs rolled up
             $eans = array();
             foreach ($childProducts as $child) {
                 self::pushValueIfNotNull($eans, self::getProductAttributeValue($child, $eanCode, $storeId));
             }
-            fwrite($fh, self::getGTINsCommaSeparated($eans));
-            fwrite($fh, "\t");
+            fwrite($catalogFeedFile, self::getGTINsCommaSeparated($eans));
+            fwrite($catalogFeedFile, "\t");
             // JANs rolled up
             $jans = array();
             foreach ($childProducts as $child) {
                 self::pushValueIfNotNull($jans, self::getProductAttributeValue($child, $janCode, $storeId));
             }
-            fwrite($fh, self::getGTINsCommaSeparated($jans));
-            fwrite($fh, "\t");
+            fwrite($catalogFeedFile, self::getGTINsCommaSeparated($jans));
+            fwrite($catalogFeedFile, "\t");
             // ASINs rolled up
             $asins = array();
             foreach ($childProducts as $child) {
                 self::pushValueIfNotNull($asins, self::getProductAttributeValue($child, $asinCode, $storeId));
             }
-            fwrite($fh, self::getGTINsCommaSeparated($asins));
+            fwrite($catalogFeedFile, self::getGTINsCommaSeparated($asins));
         } else {
             // this is a simple product just output the single GTINs
             //UPC
-            fwrite($fh, self::getProductAttributeValue($product, $upcCode, $storeId));
-            fwrite($fh, "\t");
+            fwrite($catalogFeedFile, self::getProductAttributeValue($product, $upcCode, $storeId));
+            fwrite($catalogFeedFile, "\t");
             //MPN
-            fwrite($fh, self::getProductAttributeValue($product, $mpnCode, $storeId));
-            fwrite($fh, "\t");
+            fwrite($catalogFeedFile, self::getProductAttributeValue($product, $mpnCode, $storeId));
+            fwrite($catalogFeedFile, "\t");
             //ISBN
-            fwrite($fh, self::getProductAttributeValue($product, $isbnCode, $storeId));
-            fwrite($fh, "\t");
+            fwrite($catalogFeedFile, self::getProductAttributeValue($product, $isbnCode, $storeId));
+            fwrite($catalogFeedFile, "\t");
             //EAN
-            fwrite($fh, self::getProductAttributeValue($product, $eanCode, $storeId));
-            fwrite($fh, "\t");
+            fwrite($catalogFeedFile, self::getProductAttributeValue($product, $eanCode, $storeId));
+            fwrite($catalogFeedFile, "\t");
             //JAN
-            fwrite($fh, self::getProductAttributeValue($product, $janCode, $storeId));
-            fwrite($fh, "\t");
+            fwrite($catalogFeedFile, self::getProductAttributeValue($product, $janCode, $storeId));
+            fwrite($catalogFeedFile, "\t");
             //ASIN
-            fwrite($fh, self::getProductAttributeValue($product, $asinCode, $storeId));
+            fwrite($catalogFeedFile, self::getProductAttributeValue($product, $asinCode, $storeId));
         }
 
-        fwrite($fh, "\n");
+        fwrite($catalogFeedFile, "\n");
     }
 
     private function pushValueIfNotNull(&$arr, $val) {
