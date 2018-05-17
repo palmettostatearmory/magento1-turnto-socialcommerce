@@ -170,7 +170,7 @@
                 <cc_sort_order>Most Recent</cc_sort_order>
             </checkoutcomments>
             <qa>
-                <qa_setup_type>overlay</qa_setup_type>
+                <qa_setup_type>staticEmbed</qa_setup_type>
                 <qa_teaser_custom_enabled>1</qa_teaser_custom_enabled>
                 <qa_teaser_type>iTeaserFunc</qa_teaser_type>
                 <qa_teaser_custom><![CDATA[
@@ -209,7 +209,7 @@
                 <qa_teaser_custom_function_name>itemTeaserDisplay</qa_teaser_custom_function_name>
             </qa>
             <reviews>
-                <reviews_setup_type>overlay</reviews_setup_type>
+                <reviews_setup_type>staticEmbed</reviews_setup_type>
                 <reviews_teaser_custom_enabled>1</reviews_teaser_custom_enabled>
                 <reviews_teaser_custom><![CDATA[
 <script type="text/javascript">
