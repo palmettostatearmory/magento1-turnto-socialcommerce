@@ -12,11 +12,6 @@
             <adminblock1>
             	<class>Turnto_Admin_Block</class>
            	</adminblock1> 
-            <review>
-                <rewrite>
-                    <helper>Turnto_Admin_Block_Review_Helper</helper>
-                </rewrite>
-            </review> 
         </blocks>
         <helpers>
             <adminhelper1>
@@ -24,11 +19,11 @@
             </adminhelper1>
         </helpers>
         <models>
-            <catalog>
+            <review>
                 <rewrite>
-                    <product>Turnto_Admin_Model_Catalog_Product</product>
+                    <review>Turnto_Admin_Model_Review_Review</review>
                 </rewrite>
-            </catalog>
+            </review>
             <turnto_admin>
                 <class>Turnto_Admin_Model</class>
                 <resourceModel>turnto_admin_resource</resourceModel>
