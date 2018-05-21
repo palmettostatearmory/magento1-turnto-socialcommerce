@@ -15,7 +15,7 @@
 <script type="text/javascript">
     function localLogoutFunction(callbackFn) {
         new Ajax.Request(
-            '/index.php/turntologin/index/logout',
+            '<?php echo Mage::getUrl('turntologin/index/logout') ?>',
             {
                 method:'post',
                 onComplete:function (transport) {
@@ -31,7 +31,7 @@
     }
     function localGetUserInfoFunction(callbackFn) {
         new Ajax.Request(
-            '/index.php/turntologin/index/getUserStatus',
+            '<?php echo Mage::getUrl('turntologin/index/getUserStatus') ?>',
             {
                 method:'post',
                 onComplete:function (transport) {
@@ -108,7 +108,7 @@
         <?php if (intval(Mage::getStoreConfig('turnto_admin/singleSignOn/enabled')) == 1): ?>
         ,registration: {
             localGetLoginStatusFunction:localGetLoginStatusFunction,
-            localRegistrationUrl:'/index.php/turntologin/index',
+            localRegistrationUrl: '<?php echo Mage::getUrl('turntologin/index') ?>',
             localGetUserInfoFunction:localGetUserInfoFunction,
             localLogoutFunction:localLogoutFunction
         }
