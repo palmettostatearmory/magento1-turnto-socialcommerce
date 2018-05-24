@@ -39,21 +39,21 @@ class Turnto_Admin_Model_Review_Review extends Mage_Review_Model_Review
                                   ->addFieldToFilter('product_id', $entityIds)
                                   ->load();
         
-        $ratingArray = array();
-        
         foreach ($collection->getItems() as $_item ) {
+            $_summary = new Varien_Object();
+            $_summary
+                ->setReviewsCount(0)
+                ->setRatingSummary(0)
+            ;
             foreach ($ratingData as $_rate) {
                 if ($_rate->getProductId() == $_item->getEntityId()) {
-                    
-                    $_summary = new Varien_Object();
                     $_summary
                         ->setReviewsCount($_rate->getReviewCount())
                         ->setRatingSummary($_rate->getRating() * 20)
                     ;
-                    
-                    $_item->setRatingSummary($_summary);
                 }
             }
+            $_item->setRatingSummary($_summary);
         }
         
         return $this;
